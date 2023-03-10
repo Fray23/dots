@@ -8,18 +8,25 @@ return require('packer').startup(function(use)
     use 'shaunsingh/nord.nvim'
     use 'morhetz/gruvbox'
     use 'ellisonleao/gruvbox.nvim'
+    use 'Mofiqul/dracula.nvim'
+    use 'sainnhe/everforest'
 
     use 'ryanoasis/vim-devicons'
+    use 'nvim-tree/nvim-web-devicons'
     use 'preservim/nerdtree'
     use 'Xuyuanp/nerdtree-git-plugin'
     use 'tpope/vim-fugitive'
     use 'airblade/vim-gitgutter'
     use 'junegunn/fzf'
     use 'junegunn/fzf.vim'
+
+    -- telescope
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         requires = { {'nvim-lua/plenary.nvim'} }
     }
+    use 'nvim-telescope/telescope-file-browser.nvim'
+
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
@@ -28,14 +35,14 @@ return require('packer').startup(function(use)
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
     }
-    -- python
     use 'dense-analysis/ale'
     use {
       "startup-nvim/startup.nvim",
-      config = function()
-        require"startup".setup()
-      end
+       config = function()
+         require"startup".setup()
+       end
     }
+    use 'preservim/tagbar'
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
@@ -55,6 +62,6 @@ return require('packer').startup(function(use)
           -- Snippets
           {'L3MON4D3/LuaSnip'},             -- Required
           {'rafamadriz/friendly-snippets'}, -- Optional
-        }
-}
+      }
+  }
 end)
