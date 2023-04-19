@@ -1,8 +1,6 @@
 vim.g.everforest_background = 'hard'
-vim.cmd('colorscheme onedark')
+vim.cmd('colorscheme everforest')
 vim.cmd('hi linenr guifg=white')
--- centerpad
-vim.keymap.set('n', '<leader>z', ':Centerpad 20<cr>', {})
 -- telescope
 local builtin = require('telescope.builtin')
 
@@ -17,6 +15,9 @@ vim.keymap.set('n', '<leader>fl', ':Lines<CR>')
 
 -- nerdtree
 vim.cmd('autocmd FileType nerdtree setlocal relativenumber')
+-- -- Open the existing NERDTree on each new tab.
+-- vim.cmd("autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif")
+
 vim.g['NERDTreeShowHidden'] = 1
 vim.g['NERDTreeWinSize'] = 40
 -- vim.keymap.set('n', '<C-n>', ':tabnew<CR>')
@@ -75,19 +76,48 @@ lsp.preset({
   manage_nvim_cmp = true,
   suggest_lsp_servers = false,
 })
+
 lsp.nvim_workspace()
+lsp.default_keymaps({
+  buffer = bufnr,
+})
+
+local cmp = require('cmp')
+local cmp_action = lsp.cmp_action()
+
+cmp.setup({
+  mapping = {
+    ['<Tab>'] = cmp_action.tab_complete(),
+    ['<S-Tab>'] = cmp_action.select_prev_or_fallback(),
+  }
+})
+
 lsp.setup()
 
 -- startup
--- require("startup").setup({theme = "dashboard"}) -- put theme name here
-
-local banner = {}
-img = io.open('/home/fs/Downloads/icons/good')
-for line in img:lines() do
-    table.insert(banner, line .. '\n')
-end
-img:close()
+startup = require("startup") -- put theme name here
+startup.setup({theme = "dashboard"})
 
 -- tagbar
 vim.keymap.set('n', 't', ':TagbarToggle<CR>')
 
+local hop = require('hop')
+hop.setup()
+local directions = require('hop.hint').HintDirection
+vim.keymap.set('', 'f', function()
+  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+end, {remap=true})
+vim.keymap.set('', 'F', function()
+  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+end, {remap=true})
+vim.keymap.set('', 't', function()
+  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+end, {remap=true})
+vim.keymap.set('', 'T', function()
+  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
+end, {remap=true})
+
+
+-- auto pairs
+-- Настройка символов, для которых будет автоматически вставляться закрывающая скобка
+require('nvim-autopairs').setup{}

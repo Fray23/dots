@@ -57,7 +57,9 @@ function rest()
             command = line
         else
             line = string.gsub(line, " ", "")
-            json = json .. line
+            if not string.starts(line, "#") then
+                json = json .. line
+            end
         end
         count = count + 1
     end
@@ -81,7 +83,6 @@ function rest()
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(win, buf)
-    -- vim.api.nvim_buf_set_option(buf, 'buftype', 'nowrite')
     vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
 
 
@@ -103,4 +104,4 @@ end
 
 
 vim.api.nvim_create_user_command('R', rest, {})
-
+vim.api.nvim_create_user_command('Json', '%!jq .', {})

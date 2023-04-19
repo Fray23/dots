@@ -10,15 +10,27 @@ return require('packer').startup(function(use)
     use 'ellisonleao/gruvbox.nvim'
     use 'Mofiqul/dracula.nvim'
     use 'sainnhe/everforest'
+    use 'catppuccin/nvim'
+    use 'bluz71/vim-nightfly-colors'
 
     use 'ryanoasis/vim-devicons'
     use 'nvim-tree/nvim-web-devicons'
     use 'preservim/nerdtree'
     use 'Xuyuanp/nerdtree-git-plugin'
-    use 'tpope/vim-fugitive'
     use 'airblade/vim-gitgutter'
+    use 'tpope/vim-fugitive'     -- полезные команды
+    use 'windwp/nvim-autopairs'
+
     use 'junegunn/fzf'
     use 'junegunn/fzf.vim'
+    use {
+      'phaazon/hop.nvim',
+      branch = 'v2', -- optional but strongly recommended
+      config = function()
+        -- you can configure Hop the way you like here; see :h hop-config
+        require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+      end
+    }
 
     -- telescope
     use {
@@ -26,7 +38,6 @@ return require('packer').startup(function(use)
         requires = { {'nvim-lua/plenary.nvim'} }
     }
     use 'nvim-telescope/telescope-file-browser.nvim'
-
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
@@ -44,24 +55,23 @@ return require('packer').startup(function(use)
     }
     use 'preservim/tagbar'
     use {
-        'VonHeikemen/lsp-zero.nvim',
-        requires = {
-          -- LSP Support
-          {'neovim/nvim-lspconfig'},             -- Required
-          {'williamboman/mason.nvim'},           -- Optional
-          {'williamboman/mason-lspconfig.nvim'}, -- Optional
+      'VonHeikemen/lsp-zero.nvim',
+      branch = 'v2.x',
+      requires = {
+        -- LSP Support
+        {'neovim/nvim-lspconfig'},             -- Required
+        {                                      -- Optional
+          'williamboman/mason.nvim',
+          run = function()
+            pcall(vim.cmd, 'MasonUpdate')
+          end,
+        },
+        {'williamboman/mason-lspconfig.nvim'}, -- Optional
 
-          -- Autocompletion
-          {'hrsh7th/nvim-cmp'},         -- Required
-          {'hrsh7th/cmp-nvim-lsp'},     -- Required
-          {'hrsh7th/cmp-buffer'},       -- Optional
-          {'hrsh7th/cmp-path'},         -- Optional
-          {'saadparwaiz1/cmp_luasnip'}, -- Optional
-          {'hrsh7th/cmp-nvim-lua'},     -- Optional
-
-          -- Snippets
-          {'L3MON4D3/LuaSnip'},             -- Required
-          {'rafamadriz/friendly-snippets'}, -- Optional
+        -- Autocompletion
+        {'hrsh7th/nvim-cmp'},     -- Required
+        {'hrsh7th/cmp-nvim-lsp'}, -- Required
+        {'L3MON4D3/LuaSnip'},     -- Required
       }
-  }
+}
 end)
