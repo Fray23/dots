@@ -42,6 +42,8 @@ function getPath(str)
 end
 
 function rest()
+    vim.api.nvim_command('w')
+
     local absolute_current_file = vim.api.nvim_buf_get_name(0)
     local absolute_current_dir = getPath(absolute_current_file)
     local neovim_open_path = vim.fn.getcwd()
@@ -72,12 +74,19 @@ function rest()
         qparam = qparam.gsub(qparam, ":", "==")
         qparam = qparam.gsub(qparam, ",", " ")
         rest_command = command .. " " .. qparam
+    elseif string.starts(command, "http -f") then
+        form_param = string.gsub(json, "{", "")
+        form_param = form_param.gsub(form_param, "}", "")
+        form_param = form_param.gsub(form_param, "'", "")
+        form_param = form_param.gsub(form_param, ":", "=")
+        form_param = form_param.gsub(form_param, ",", " ")
+        rest_command = command .. " " .. form_param
     else
         rest_command = "echo -n '" .. json .. "' | " .. command
     end
 
     local session_file = neovim_open_path .. '/' .. 'session'
-    local rest_command = rest_command .. ' --pretty format --print=hb --session=' .. session_file
+    local rest_command = rest_command .. ' --pretty format --print=hb --session=' .. session_file .. ' --timeout 2'
 
     vim.cmd('vsplit')
     local win = vim.api.nvim_get_current_win()
@@ -85,10 +94,9 @@ function rest()
     vim.api.nvim_win_set_buf(win, buf)
     vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
 
-
     httpie_exec = io.popen(rest_command)
-
     http_result = {}
+
     for line in httpie_exec:lines() do
         table.insert(http_result, line)
     end
