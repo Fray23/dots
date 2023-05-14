@@ -26,7 +26,11 @@ alias v='nvim'
 alias sudo='doas'
 alias tw='tmux new -s work'
 alias tq='tmux new -s qute'
+alias tm='tmux new -s moc'
 alias taw='tmux a -t work'
 alias taq='tmux a -t qute'
+alias tam='tmux a -t moc'
 alias tl='tmux ls'
+alias moc='mocp -T orange'
+
 
