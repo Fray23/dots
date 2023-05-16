@@ -27,7 +27,6 @@ alias sudo='doas'
 alias tw="tmux has-session -t work || tmux new -s work; tmux a -t work"
 alias tq="tmux has-session -t qute || tmux new -s qute; tmux a -t qute"
 alias tm="tmux has-session -t moc || tmux new -s moc; tmux a -t moc"
+alias fm="thunar"
 alias tl='tmux ls'
 alias moc='mocp -T orange'
-
-
