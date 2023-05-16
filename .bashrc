@@ -24,12 +24,9 @@ alias work='qutebrowser -B /home/fs/Desktop/qute/work'
 alias day='qutebrowser -B /home/fs/Desktop/qute/day'
 alias v='nvim'
 alias sudo='doas'
-alias tw='tmux new -s work'
-alias tq='tmux new -s qute'
-alias tm='tmux new -s moc'
-alias taw='tmux a -t work'
-alias taq='tmux a -t qute'
-alias tam='tmux a -t moc'
+alias tw="tmux has-session -t work || tmux new -s work; tmux a -t work"
+alias tq="tmux has-session -t qute || tmux new -s qute; tmux a -t qute"
+alias tm="tmux has-session -t moc || tmux new -s moc; tmux a -t moc"
 alias tl='tmux ls'
 alias moc='mocp -T orange'
 
