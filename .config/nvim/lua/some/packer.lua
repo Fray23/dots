@@ -12,6 +12,10 @@ return require('packer').startup(function(use)
     use 'sainnhe/everforest'
     use 'catppuccin/nvim'
     use 'bluz71/vim-nightfly-colors'
+    use 'NTBBloodbath/doom-one.nvim'
+
+    -- decorations
+    use 'lukas-reineke/indent-blankline.nvim'
 
     use 'ryanoasis/vim-devicons'
     use 'nvim-tree/nvim-web-devicons'
@@ -20,6 +24,7 @@ return require('packer').startup(function(use)
     use 'airblade/vim-gitgutter'
     use 'tpope/vim-fugitive'     -- полезные команды
     use 'windwp/nvim-autopairs'
+    use {"shortcuts/no-neck-pain.nvim", tag = "*" }
 
     use 'junegunn/fzf'
     use 'junegunn/fzf.vim'
@@ -38,6 +43,7 @@ return require('packer').startup(function(use)
         requires = { {'nvim-lua/plenary.nvim'} }
     }
     use 'nvim-telescope/telescope-file-browser.nvim'
+    use 'ThePrimeagen/harpoon'
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }

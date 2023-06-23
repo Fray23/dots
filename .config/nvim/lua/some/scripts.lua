@@ -58,7 +58,7 @@ function rest()
         if count == 0 then
             command = line
         else
-            line = string.gsub(line, " ", "")
+            -- line = string.gsub(line, " ", "")
             if not string.starts(line, "#") then
                 json = json .. line
             end
@@ -74,6 +74,7 @@ function rest()
         qparam = qparam.gsub(qparam, ":", "==")
         qparam = qparam.gsub(qparam, ",", " ")
         rest_command = command .. " " .. qparam
+        print(rest_command)
     elseif string.starts(command, "http -f") then
         form_param = string.gsub(json, "{", "")
         form_param = form_param.gsub(form_param, "}", "")
@@ -86,7 +87,7 @@ function rest()
     end
 
     local session_file = neovim_open_path .. '/' .. 'session'
-    local rest_command = rest_command .. ' --pretty format --print=hb --session=' .. session_file .. ' --timeout 2'
+    local rest_command = rest_command .. ' --pretty format --print=hb --session=' .. session_file .. ' --timeout 8'
 
     vim.cmd('vsplit')
     local win = vim.api.nvim_get_current_win()
@@ -103,7 +104,7 @@ function rest()
 
     vim.api.nvim_buf_set_option(buf, 'modifiable', true)
     vim.api.nvim_buf_set_lines(buf, 0, 0, true, http_result)
-    vim.api.nvim_buf_set_option(buf, "ft", "json")
+    vim.api.nvim_buf_set_option(buf, "ft", "http")
 
     file:close()
     httpie_exec:close()

@@ -1,13 +1,14 @@
 vim.g.everforest_background = 'hard'
+-- vim.cmd('colorscheme everforest')
 vim.cmd('colorscheme everforest')
+vim.cmd('set background=dark')
+-- vim.cmd('colorscheme onedark')
+
+-- цвет номеров строк
 vim.cmd('hi linenr guifg=white')
+-- vim.cmd('hi linenr guifg=#D3C6AA')
 -- telescope
 local builtin = require('telescope.builtin')
-
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 -- fzf
 vim.env.FZF_DEFAULT_OPTS = "--bind \"ctrl-n:preview-down,ctrl-p:preview-up\""
@@ -15,23 +16,15 @@ vim.keymap.set('n', '<leader>fl', ':Lines<CR>')
 
 -- nerdtree
 vim.cmd('autocmd FileType nerdtree setlocal relativenumber')
--- -- Open the existing NERDTree on each new tab.
+-- Open the existing NERDTree on each new tab.
+vim.cmd("autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif")
+-- Close the tab if NERDTree is the only window remaining in it.
+vim.cmd("autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif")
+-- Open the existing NERDTree on each new tab.
 -- vim.cmd("autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif")
 
 vim.g['NERDTreeShowHidden'] = 1
 vim.g['NERDTreeWinSize'] = 40
--- vim.keymap.set('n', '<C-n>', ':tabnew<CR>')
-vim.keymap.set('n', '<S-l>', ':tabn<cr>')
-vim.keymap.set('n', '<S-h>', ':tabp<cr>')
-vim.keymap.set('n', '<C-J>', '<C-W><C-J>')
-vim.keymap.set('n', '<C-K>', '<C-W><C-K>')
-vim.keymap.set('n', '<C-L>', '<C-W><C-L>')
-vim.keymap.set('n', '<C-H>', '<C-W><C-H>')
-
-vim.keymap.set('n', '<C-n>', ':NERDTree<CR>')
-vim.keymap.set('n', '<C-f>', ':NERDTreeFind<CR>')
-vim.keymap.set('n', '<C-t>', ':NERDTreeToggle<CR>')
-
 
 -- lualine
 vim.o.showtabline = 2
@@ -98,9 +91,7 @@ lsp.setup()
 startup = require("startup") -- put theme name here
 startup.setup({theme = "dashboard"})
 
--- tagbar
-vim.keymap.set('n', 't', ':TagbarToggle<CR>')
-
+-- hob
 local hop = require('hop')
 hop.setup()
 local directions = require('hop.hint').HintDirection
@@ -110,14 +101,95 @@ end, {remap=true})
 vim.keymap.set('', 'F', function()
   hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
 end, {remap=true})
-vim.keymap.set('', 't', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, {remap=true})
-vim.keymap.set('', 'T', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, {remap=true})
 
 
 -- auto pairs
 -- Настройка символов, для которых будет автоматически вставляться закрывающая скобка
 require('nvim-autopairs').setup{}
+
+require("no-neck-pain").setup({ width = 130 })
+-- require("no-neck-pain").setup({
+--     buffers = {
+--         right = {
+--             enabled = false,
+--         },
+--     },
+-- })
+
+-- harpoon
+print(vim.api.nvim_win_get_width(0))
+require("harpoon").setup({
+    menu = {
+        -- width = vim.api.nvim_win_get_width(0) - 4,
+        width = 100
+    }
+})
+
+require("indent_blankline").setup {
+    -- for example, context is off by default, use this to turn it on
+    show_current_context = true,
+    show_current_context_start = true,
+}
+
+-- ----------------------
+-- SHORTCUTS
+-- ----------------------
+
+vim.keymap.set('n', 'j', 'jzz')
+vim.keymap.set('n', 'k', 'kzz')
+
+vim.keymap.set('n', '<leader>z', ':NoNeckPain<CR>')
+
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('i', 'jk', '<esc>')
+vim.keymap.set('n', '<C-c>', '<esc>', { silent=true })
+
+vim.keymap.set('n', '<C-n>', ':bn<CR>')
+vim.keymap.set('n', '<C-p>', ':bp<CR>')
+
+vim.keymap.set('n', 'm', '<CR>')
+vim.keymap.set('v', 'p', 'P')
+vim.keymap.set('n', '"', ':noh<CR>', { silent=true })
+
+vim.keymap.set('n', '<C-S-k>', ':resize +5<cr>')
+vim.keymap.set('n', '<C-S-j>', ':resize -5<cr>')
+vim.keymap.set('n', '<S-K>', ':vertical resize -5<cr>')
+vim.keymap.set('n', '<S-J>', ':vertical resize +5<cr>')
+
+vim.keymap.set('n', '<C-y>', '<C-y>kzz')
+vim.keymap.set('n', '<C-e>', '<C-e>jzz')
+
+-- telescope
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+
+-- nerdtree
+vim.keymap.set('n', '>', ':tabn<cr>')
+vim.keymap.set('n', '<', ':tabp<cr>')
+vim.keymap.set('n', '<C-J>', '<C-W><C-J>')
+vim.keymap.set('n', '<C-K>', '<C-W><C-K>')
+vim.keymap.set('n', '<C-L>', '<C-W><C-L>')
+vim.keymap.set('n', '<C-H>', '<C-W><C-H>')
+
+vim.keymap.set('n', '<C-f>', ':NERDTreeFind<CR>')
+-- vim.keymap.set('n', '<C-t>', ':tabdo NERDTreeToggle<CR>')
+vim.keymap.set('n', '<C-t>', ':NERDTreeToggle<CR>')
+
+-- tagbar
+vim.keymap.set('n', 't', ':TagbarToggle<CR>')
+
+-- harpoon
+vim.api.nvim_set_keymap("n", "<leader>a", "<cmd>lua require('harpoon.mark').add_file()<cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>l", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<S-l>", '<cmd>lua require("harpoon.ui").nav_next()<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<S-h>", '<cmd>lua require("harpoon.ui").nav_prev()<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>1", '<cmd>lua require("harpoon.ui").nav_file(1)<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>2", '<cmd>lua require("harpoon.ui").nav_file(2)<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>3", '<cmd>lua require("harpoon.ui").nav_file(3)<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>4", '<cmd>lua require("harpoon.ui").nav_file(4)<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>5", '<cmd>lua require("harpoon.ui").nav_file(5)<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>6", '<cmd>lua require("harpoon.ui").nav_file(6)<cr>', { noremap = true, silent = true })
+
