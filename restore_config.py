@@ -20,6 +20,7 @@ def copy_config_files(config_dir, dest_dir):
 
 file_list = [
     ('.config', '~/.config'),
+    ('.local', '~/.local'),
     ('home', '~/'),
 ]
 
