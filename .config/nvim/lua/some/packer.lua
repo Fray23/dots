@@ -13,6 +13,7 @@ return require('packer').startup(function(use)
     use 'catppuccin/nvim'
     use 'bluz71/vim-nightfly-colors'
     use 'NTBBloodbath/doom-one.nvim'
+    use 'metalelf0/base16-black-metal-scheme'
 
     -- decorations
     use 'lukas-reineke/indent-blankline.nvim'

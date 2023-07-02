@@ -1,6 +1,6 @@
 vim.g.everforest_background = 'hard'
 -- vim.cmd('colorscheme everforest')
-vim.cmd('colorscheme everforest')
+vim.cmd('colorscheme base16-black-metal')
 vim.cmd('set background=dark')
 -- vim.cmd('colorscheme onedark')
 
