@@ -14,9 +14,13 @@ return require('packer').startup(function(use)
     use 'bluz71/vim-nightfly-colors'
     use 'NTBBloodbath/doom-one.nvim'
     use 'metalelf0/base16-black-metal-scheme'
+    use 'EdenEast/nightfox.nvim'
+    use 'ayu-theme/ayu-vim'
+    use 'Shatur/neovim-ayu'
+    use 'lunacookies/vim-colors-xcode'
 
     -- decorations
-    use 'lukas-reineke/indent-blankline.nvim'
+    -- use 'lukas-reineke/indent-blankline.nvim'
 
     use 'ryanoasis/vim-devicons'
     use 'nvim-tree/nvim-web-devicons'
@@ -25,6 +29,14 @@ return require('packer').startup(function(use)
     use 'airblade/vim-gitgutter'
     use 'tpope/vim-fugitive'     -- полезные команды
     use 'windwp/nvim-autopairs'
+    use {
+      'phaazon/mind.nvim',
+      branch = 'v2.2',
+      requires = { 'nvim-lua/plenary.nvim' },
+      config = function()
+        require'mind'.setup()
+      end
+    }
     use {"shortcuts/no-neck-pain.nvim", tag = "*" }
 
     use 'junegunn/fzf'

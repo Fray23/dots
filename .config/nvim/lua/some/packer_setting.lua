@@ -1,6 +1,7 @@
 vim.g.everforest_background = 'hard'
 -- vim.cmd('colorscheme everforest')
 vim.cmd('colorscheme base16-black-metal')
+-- vim.cmd('colorscheme doom-one')
 vim.cmd('set background=dark')
 -- vim.cmd('colorscheme onedark')
 
@@ -32,12 +33,14 @@ require('lualine').setup()
 
 -- ale
 vim.g.ale_echo_msg_format = '[%linter%] [%severity%] %code: %%s'
-vim.g.ale_python_pylint_change_directory=0
+vim.g.ale_python_pylint_change_directory = 0
+vim.g.ale_python_pylint_auto_pipenv = 1
 vim.g.ale_python_flake8_change_directory=0
 vim.g.ale_python_flake8_options = '--max-line-length=120'
 vim.g.ale_python_mypy_change_directory=0
 vim.g.ale_fix_on_save = 0
-vim.g.ale_fixers = {"pylint", "flake8"}
+-- vim.g.ale_fixers = {"flake8"}
+-- vim.g.ale_linters = {"flake8"}
 
 -- # nvim-treesitter
 local status_ok, configs = pcall(require, "nvim-treesitter.configs")
@@ -107,7 +110,7 @@ end, {remap=true})
 -- Настройка символов, для которых будет автоматически вставляться закрывающая скобка
 require('nvim-autopairs').setup{}
 
-require("no-neck-pain").setup({ width = 130 })
+require("no-neck-pain").setup({ width = 150 })
 -- require("no-neck-pain").setup({
 --     buffers = {
 --         right = {
@@ -125,18 +128,20 @@ require("harpoon").setup({
     }
 })
 
-require("indent_blankline").setup {
-    -- for example, context is off by default, use this to turn it on
-    show_current_context = true,
-    show_current_context_start = true,
-}
+-- require("indent_blankline").setup {
+--     -- for example, context is off by default, use this to turn it on
+--     show_current_context = true,
+--     show_current_context_start = true,
+-- }
+
+require'mind'.setup()
 
 -- ----------------------
 -- SHORTCUTS
 -- ----------------------
 
-vim.keymap.set('n', 'j', 'jzz')
-vim.keymap.set('n', 'k', 'kzz')
+-- vim.keymap.set('n', 'j', 'jzz')
+-- vim.keymap.set('n', 'k', 'kzz')
 
 vim.keymap.set('n', '<leader>z', ':NoNeckPain<CR>')
 
@@ -148,7 +153,6 @@ vim.keymap.set('n', '<C-c>', '<esc>', { silent=true })
 vim.keymap.set('n', '<C-n>', ':bn<CR>')
 vim.keymap.set('n', '<C-p>', ':bp<CR>')
 
-vim.keymap.set('n', 'm', '<CR>')
 vim.keymap.set('v', 'p', 'P')
 vim.keymap.set('n', '"', ':noh<CR>', { silent=true })
 
@@ -159,6 +163,10 @@ vim.keymap.set('n', '<S-J>', ':vertical resize +5<cr>')
 
 vim.keymap.set('n', '<C-y>', '<C-y>kzz')
 vim.keymap.set('n', '<C-e>', '<C-e>jzz')
+
+-- Mind
+vim.keymap.set('n', '<leader>n', ':MindOpenProject<CR>')
+vim.keymap.set('n', '<leader>c', ':MindClose<CR>')
 
 -- telescope
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})

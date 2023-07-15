@@ -1,11 +1,11 @@
-font_size 12
+font_size 10
 
 font_family      NotoMono Nerd Font
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
 
-background_opacity 0.9
+background_opacity 1
 window_padding_width 15
 allow_remote_control yes
 enable_audio_bell no
@@ -20,8 +20,7 @@ background_image_layout scaled
 
 
 # BEGIN_KITTY_THEME
-# Nord
-# include current-theme.conf
-include everforset-theme.conf
+# One Dark
+include current-theme.conf
 # END_KITTY_THEME
 

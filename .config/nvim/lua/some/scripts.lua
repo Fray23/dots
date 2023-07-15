@@ -58,7 +58,7 @@ function rest()
         if count == 0 then
             command = line
         else
-            -- line = string.gsub(line, " ", "")
+            line = string.gsub(line, " ", "")
             if not string.starts(line, "#") then
                 json = json .. line
             end
@@ -74,7 +74,6 @@ function rest()
         qparam = qparam.gsub(qparam, ":", "==")
         qparam = qparam.gsub(qparam, ",", " ")
         rest_command = command .. " " .. qparam
-        print(rest_command)
     elseif string.starts(command, "http -f") then
         form_param = string.gsub(json, "{", "")
         form_param = form_param.gsub(form_param, "}", "")
@@ -114,3 +113,8 @@ end
 
 vim.api.nvim_create_user_command('R', rest, {})
 vim.api.nvim_create_user_command('Json', '%!jq .', {})
+
+-- custom commands
+vim.api.nvim_create_user_command('Gadd', 'Git add %', {})
+vim.api.nvim_create_user_command('Gl', 'Git log -p %', {})
+vim.api.nvim_create_user_command('Gd', 'Git diff %', {})

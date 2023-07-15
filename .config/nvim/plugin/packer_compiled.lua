@@ -84,6 +84,16 @@ _G.packer_plugins = {
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/ale",
     url = "https://github.com/dense-analysis/ale"
   },
+  ["ayu-vim"] = {
+    loaded = true,
+    path = "/home/fs/.local/share/nvim/site/pack/packer/start/ayu-vim",
+    url = "https://github.com/ayu-theme/ayu-vim"
+  },
+  ["base16-black-metal-scheme"] = {
+    loaded = true,
+    path = "/home/fs/.local/share/nvim/site/pack/packer/start/base16-black-metal-scheme",
+    url = "https://github.com/metalelf0/base16-black-metal-scheme"
+  },
   ["cmp-nvim-lsp"] = {
     loaded = true,
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
@@ -160,6 +170,17 @@ _G.packer_plugins = {
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
   },
+  ["mind.nvim"] = {
+    config = { "\27LJ\2\n2\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\tmind\frequire\0" },
+    loaded = true,
+    path = "/home/fs/.local/share/nvim/site/pack/packer/start/mind.nvim",
+    url = "https://github.com/phaazon/mind.nvim"
+  },
+  ["neovim-ayu"] = {
+    loaded = true,
+    path = "/home/fs/.local/share/nvim/site/pack/packer/start/neovim-ayu",
+    url = "https://github.com/Shatur/neovim-ayu"
+  },
   nerdtree = {
     loaded = true,
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/nerdtree",
@@ -169,6 +190,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/nerdtree-git-plugin",
     url = "https://github.com/Xuyuanp/nerdtree-git-plugin"
+  },
+  ["nightfox.nvim"] = {
+    loaded = true,
+    path = "/home/fs/.local/share/nvim/site/pack/packer/start/nightfox.nvim",
+    url = "https://github.com/EdenEast/nightfox.nvim"
   },
   ["no-neck-pain.nvim"] = {
     loaded = true,
@@ -251,6 +277,11 @@ _G.packer_plugins = {
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
     url = "https://github.com/folke/tokyonight.nvim"
   },
+  ["vim-colors-xcode"] = {
+    loaded = true,
+    path = "/home/fs/.local/share/nvim/site/pack/packer/start/vim-colors-xcode",
+    url = "https://github.com/lunacookies/vim-colors-xcode"
+  },
   ["vim-devicons"] = {
     loaded = true,
     path = "/home/fs/.local/share/nvim/site/pack/packer/start/vim-devicons",
@@ -274,14 +305,18 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: hop.nvim
-time([[Config for hop.nvim]], true)
-try_loadstring("\27LJ\2\nU\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\tkeys\28etovxqpdygfblzhckisuran\nsetup\bhop\frequire\0", "config", "hop.nvim")
-time([[Config for hop.nvim]], false)
+-- Config for: mind.nvim
+time([[Config for mind.nvim]], true)
+try_loadstring("\27LJ\2\n2\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\tmind\frequire\0", "config", "mind.nvim")
+time([[Config for mind.nvim]], false)
 -- Config for: startup.nvim
 time([[Config for startup.nvim]], true)
 try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fstartup\frequire\0", "config", "startup.nvim")
 time([[Config for startup.nvim]], false)
+-- Config for: hop.nvim
+time([[Config for hop.nvim]], true)
+try_loadstring("\27LJ\2\nU\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\tkeys\28etovxqpdygfblzhckisuran\nsetup\bhop\frequire\0", "config", "hop.nvim")
+time([[Config for hop.nvim]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then
