@@ -1,3 +1,4 @@
+firefox
 cherrytree
 chromium
 dbeaver
@@ -17,11 +18,17 @@ rofi
 steam
 telegram-desktop
 tmux
-unrar
-vi
 vim
-vimiv-qt
 virt-manager
 vlc
 xclip
-yandex-browser
+moc
+net-tools
+msr-tools
+make
+drawing
+mdcat
+thunderbird
+libreoffice-still
+bashtop
+uwufetch

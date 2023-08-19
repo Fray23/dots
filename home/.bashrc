@@ -13,7 +13,11 @@ alias grep='grep --color=auto'
 # reset=$(tput sgr0)
 # bold=$(tput bold)
 echo ""
-PS1="\[\e[0;34m\]┌─[\[\e[1;36m\u\e[0;34m\]]──[\e[1;37m\W\e[0;34m]──[\[\e[1;36m\]${HOSTNAME%%.*}\[\e[0;34m\]]\[\e[1;35m\]: \$\[\e[0;34m\]\n\[\e[0;34m\]└────╼ \[\e[1;35m\]>> \[\e[00;00m\]"
+# PS1="\[\e[0;34m\]┌─[\[\e[1;36m\u\e[0;34m\]]──[\e[1;37m\W\e[0;34m]──[\[\e[1;36m\]${HOSTNAME%%.*}\[\e[0;34m\]]\[\e[1;35m\]: \$\[\e[0;34m\]\n\[\e[0;34m\]└────╼ \[\e[1;35m\]>> \[\e[00;00m\]"
+PS1="[\w]\n-> "
+
+export VISUAL=nvim
+export EDITOR="$VISUAL"
 
 set -o vi
 bind '"jk":"\e"'

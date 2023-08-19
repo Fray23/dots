@@ -21,6 +21,7 @@ return require('packer').startup(function(use)
 
     -- decorations
     -- use 'lukas-reineke/indent-blankline.nvim'
+    use 'edluffy/hologram.nvim'
 
     use 'ryanoasis/vim-devicons'
     use 'nvim-tree/nvim-web-devicons'

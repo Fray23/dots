@@ -1,6 +1,6 @@
 vim.g.everforest_background = 'hard'
--- vim.cmd('colorscheme everforest')
-vim.cmd('colorscheme base16-black-metal')
+vim.cmd('colorscheme everforest')
+-- vim.cmd('colorscheme base16-black-metal')
 -- vim.cmd('colorscheme doom-one')
 vim.cmd('set background=dark')
 -- vim.cmd('colorscheme onedark')
@@ -128,20 +128,25 @@ require("harpoon").setup({
     }
 })
 
+
+
 -- require("indent_blankline").setup {
 --     -- for example, context is off by default, use this to turn it on
 --     show_current_context = true,
 --     show_current_context_start = true,
 -- }
 
+-- hologram
 require'mind'.setup()
 
 -- ----------------------
 -- SHORTCUTS
 -- ----------------------
 
--- vim.keymap.set('n', 'j', 'jzz')
--- vim.keymap.set('n', 'k', 'kzz')
+vim.keymap.set('n', 'j', 'jzz')
+vim.keymap.set('n', 'k', 'kzz')
+vim.keymap.set('v', 'j', 'jzz')
+vim.keymap.set('v', 'k', 'kzz')
 
 vim.keymap.set('n', '<leader>z', ':NoNeckPain<CR>')
 
@@ -155,6 +160,11 @@ vim.keymap.set('n', '<C-p>', ':bp<CR>')
 
 vim.keymap.set('v', 'p', 'P')
 vim.keymap.set('n', '"', ':noh<CR>', { silent=true })
+
+vim.keymap.set('n', '<C-J>', '<C-W><C-J>')
+vim.keymap.set('n', '<C-K>', '<C-W><C-K>')
+vim.keymap.set('n', '<C-L>', '<C-W><C-L>')
+vim.keymap.set('n', '<C-H>', '<C-W><C-H>')
 
 vim.keymap.set('n', '<C-S-k>', ':resize +5<cr>')
 vim.keymap.set('n', '<C-S-j>', ':resize -5<cr>')
@@ -177,10 +187,6 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 -- nerdtree
 vim.keymap.set('n', '>', ':tabn<cr>')
 vim.keymap.set('n', '<', ':tabp<cr>')
-vim.keymap.set('n', '<C-J>', '<C-W><C-J>')
-vim.keymap.set('n', '<C-K>', '<C-W><C-K>')
-vim.keymap.set('n', '<C-L>', '<C-W><C-L>')
-vim.keymap.set('n', '<C-H>', '<C-W><C-H>')
 
 vim.keymap.set('n', '<C-f>', ':NERDTreeFind<CR>')
 -- vim.keymap.set('n', '<C-t>', ':tabdo NERDTreeToggle<CR>')
