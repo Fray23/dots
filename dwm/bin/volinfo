@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo `pactl list sinks | grep "Volume: front" | awk {'print $5'}`
