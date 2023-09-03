@@ -1,5 +1,6 @@
 vim.g.everforest_background = 'hard'
 vim.cmd('colorscheme everforest')
+-- vim.cmd('colorscheme nord')
 -- vim.cmd('colorscheme base16-black-metal')
 -- vim.cmd('colorscheme doom-one')
 vim.cmd('set background=dark')
@@ -110,7 +111,7 @@ end, {remap=true})
 -- Настройка символов, для которых будет автоматически вставляться закрывающая скобка
 require('nvim-autopairs').setup{}
 
-require("no-neck-pain").setup({ width = 150 })
+require("no-neck-pain").setup({ width = 160 })
 -- require("no-neck-pain").setup({
 --     buffers = {
 --         right = {
@@ -124,7 +125,7 @@ print(vim.api.nvim_win_get_width(0))
 require("harpoon").setup({
     menu = {
         -- width = vim.api.nvim_win_get_width(0) - 4,
-        width = 100
+        width = 90
     }
 })
 
@@ -142,11 +143,6 @@ require'mind'.setup()
 -- ----------------------
 -- SHORTCUTS
 -- ----------------------
-
-vim.keymap.set('n', 'j', 'jzz')
-vim.keymap.set('n', 'k', 'kzz')
-vim.keymap.set('v', 'j', 'jzz')
-vim.keymap.set('v', 'k', 'kzz')
 
 vim.keymap.set('n', '<leader>z', ':NoNeckPain<CR>')
 

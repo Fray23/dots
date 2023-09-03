@@ -20,16 +20,15 @@ return require('packer').startup(function(use)
     use 'lunacookies/vim-colors-xcode'
 
     -- decorations
-    -- use 'lukas-reineke/indent-blankline.nvim'
-    use 'edluffy/hologram.nvim'
 
     use 'ryanoasis/vim-devicons'
     use 'nvim-tree/nvim-web-devicons'
     use 'preservim/nerdtree'
     use 'Xuyuanp/nerdtree-git-plugin'
     use 'airblade/vim-gitgutter'
-    use 'tpope/vim-fugitive'     -- полезные команды
+    use 'tpope/vim-fugitive'
     use 'windwp/nvim-autopairs'
+
     use {
       'phaazon/mind.nvim',
       branch = 'v2.2',
@@ -44,13 +43,11 @@ return require('packer').startup(function(use)
     use 'junegunn/fzf.vim'
     use {
       'phaazon/hop.nvim',
-      branch = 'v2', -- optional but strongly recommended
+      branch = 'v2',
       config = function()
-        -- you can configure Hop the way you like here; see :h hop-config
         require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
       end
     }
-
     -- telescope
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',

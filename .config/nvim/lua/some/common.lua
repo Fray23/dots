@@ -17,3 +17,6 @@ g.mapleader='\\'
 
 vim.o.termguicolors = true
 
+set.keymap='russian-jcukenwin'
+set.iminsert=0
+set.imsearch=0

@@ -32,3 +32,6 @@ thunderbird
 libreoffice-still
 bashtop
 uwufetch
+ttf-jetbrains-mono-nerd
+ctags
+lua-socket
