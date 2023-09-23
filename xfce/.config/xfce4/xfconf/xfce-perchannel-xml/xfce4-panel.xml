@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <channel name="xfce4-panel" version="1.0">
-  <property name="panels" type="uint" value="1">
+  <property name="panels" type="array">
+    <value type="int" value="0"/>
+    <value type="int" value="1"/>
     <property name="panel-0" type="empty">
-      <property name="position" type="string" value="p=6;x=2880;y=16"/>
+      <property name="position" type="string" value="p=8;x=960;y=1064"/>
       <property name="length" type="double" value="100"/>
       <property name="position-locked" type="bool" value="true"/>
       <property name="plugin-ids" type="array">
@@ -11,8 +13,6 @@
         <value type="int" value="7"/>
         <value type="int" value="3"/>
         <value type="int" value="2"/>
-        <value type="int" value="6"/>
-        <value type="int" value="9"/>
         <value type="int" value="5"/>
         <value type="int" value="13"/>
         <value type="int" value="11"/>
@@ -26,47 +26,37 @@
       <property name="autohide-behavior" type="uint" value="0"/>
       <property name="icon-size" type="uint" value="20"/>
       <property name="enable-struts" type="bool" value="true"/>
-      <property name="output-name" type="string" value="Automatic"/>
+      <property name="output-name" type="string" value="Primary"/>
       <property name="nrows" type="uint" value="1"/>
       <property name="leave-opacity" type="uint" value="100"/>
       <property name="enter-opacity" type="uint" value="100"/>
     </property>
     <property name="dark-mode" type="bool" value="true"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="p=6;x=16;y=1620"/>
+      <property name="size" type="uint" value="30"/>
+      <property name="enable-struts" type="bool" value="true"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="span-monitors" type="bool" value="false"/>
+      <property name="length" type="double" value="97.222222222222229"/>
+      <property name="autohide-behavior" type="uint" value="2"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="10"/>
+        <value type="int" value="6"/>
+        <value type="int" value="8"/>
+        <value type="int" value="12"/>
+      </property>
+      <property name="mode" type="uint" value="1"/>
+      <property name="length-adjust" type="bool" value="true"/>
+      <property name="output-name" type="string" value="eDP-1"/>
+      <property name="enter-opacity" type="uint" value="100"/>
+      <property name="leave-opacity" type="uint" value="100"/>
+    </property>
   </property>
   <property name="plugins" type="empty">
     <property name="plugin-4" type="string" value="pager">
       <property name="rows" type="uint" value="1"/>
       <property name="miniature-view" type="bool" value="false"/>
-    </property>
-    <property name="plugin-6" type="string" value="systray">
-      <property name="names-visible" type="array">
-        <value type="string" value="pnmixer"/>
-        <value type="string" value="manjaro-settings-manager-daemon"/>
-        <value type="string" value="networkmanager applet"/>
-        <value type="string" value="orage"/>
-        <value type="string" value="pamac-tray"/>
-        <value type="string" value="blueman-applet"/>
-        <value type="string" value="clipman"/>
-        <value type="string" value="xfce4-power-manager"/>
-        <value type="string" value="xnoise"/>
-      </property>
-      <property name="show-frame" type="bool" value="false"/>
-      <property name="known-legacy-items" type="array">
-        <value type="string" value="wi-fi network connection “s5” active: s5 (57%)"/>
-        <value type="string" value="wi-fi network connection “s5” active: s5 (60%)"/>
-        <value type="string" value="wi-fi network connection “s5” active: s5 (62%)"/>
-        <value type="string" value="pamac-tray"/>
-        <value type="string" value="networkmanager applet"/>
-        <value type="string" value="clipman"/>
-      </property>
-      <property name="known-items" type="array">
-        <value type="string" value="vlc"/>
-        <value type="string" value="ROG Control Center"/>
-        <value type="string" value="TelegramDesktop"/>
-        <value type="string" value="steam"/>
-        <value type="string" value="MSM Notifier"/>
-        <value type="string" value="blueman"/>
-      </property>
     </property>
     <property name="plugin-3" type="string" value="tasklist">
       <property name="grouping" type="uint" value="1"/>
@@ -77,10 +67,6 @@
     <property name="plugin-7" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>
       <property name="style" type="uint" value="0"/>
-    </property>
-    <property name="plugin-9" type="string" value="pulseaudio">
-      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
-      <property name="known-players" type="string" value="Firefox Web Browser;qutebrowser;VLC media player;Yandex Browser"/>
     </property>
     <property name="plugin-5" type="string" value="clock">
       <property name="mode" type="uint" value="2"/>
@@ -120,6 +106,49 @@
     <property name="plugin-2" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>
       <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-6" type="string" value="systray">
+      <property name="known-legacy-items" type="array">
+        <value type="string" value="wi-fi network connection “s5” active: s5 (74%)"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (55%)"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (49%)"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (56%)"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (58%)"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (60%)"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (57%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (58%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (63%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (74%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (67%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (70%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (69%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (71%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (68%)"/>
+        <value type="string" value="wi-fi network connection “samat” active: samat (66%)"/>
+        <value type="string" value="networkmanager applet"/>
+        <value type="string" value="rog-control-center"/>
+        <value type="string" value="wi-fi network connection “s5” active: s5 (52%)"/>
+      </property>
+      <property name="known-items" type="array">
+        <value type="string" value="steam"/>
+        <value type="string" value="vlc"/>
+        <value type="string" value="flameshot"/>
+        <value type="string" value="blueman"/>
+        <value type="string" value="ROG Control Center"/>
+        <value type="string" value="TelegramDesktop"/>
+      </property>
+    </property>
+    <property name="plugin-8" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+      <property name="known-players" type="string" value="Chromium;Firefox Web Browser;qutebrowser;VLC media player;Yandex Browser"/>
+    </property>
+    <property name="plugin-10" type="string" value="separator">
+      <property name="expand" type="bool" value="true"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-12" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+      <property name="expand" type="bool" value="true"/>
     </property>
   </property>
   <property name="configver" type="int" value="2"/>

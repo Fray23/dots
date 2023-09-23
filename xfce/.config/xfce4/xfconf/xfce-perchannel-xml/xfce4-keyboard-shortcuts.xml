@@ -39,9 +39,6 @@
       </property>
       <property name="&lt;Primary&gt;&lt;Alt&gt;p" type="string" value="xfce4-display-settings --minimal"/>
       <property name="override" type="bool" value="true"/>
-      <property name="Print" type="string" value="xfce4-screenshooter -fd 1"/>
-      <property name="&lt;Shift&gt;Print" type="string" value="xfce4-screenshooter -wd 1"/>
-      <property name="&lt;Primary&gt;&lt;Shift&gt;Print" type="string" value="xfce4-screenshooter -r"/>
       <property name="&lt;Alt&gt;space" type="string" value="mocp -G"/>
       <property name="&lt;Alt&gt;period" type="string" value="mocp -f"/>
       <property name="&lt;Alt&gt;comma" type="string" value="mocp -r"/>
@@ -50,6 +47,7 @@
       <property name="&lt;Alt&gt;Return" type="string" value="kitty"/>
       <property name="full_screen_with_padding" type="string" value="xfwm4 --replace --daemon --custom-keybindings=&quot;&lt;Alt&gt;F&quot;,fullscreen_window"/>
       <property name="&lt;Alt&gt;r" type="string" value="rofi -modi drun,run -show drun -show-icons -icon-theme &quot;Papirus&quot;"/>
+      <property name="Print" type="string" value="flameshot gui"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">

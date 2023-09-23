@@ -72,12 +72,12 @@
     <property name="wrap_windows" type="bool" value="false"/>
     <property name="wrap_workspaces" type="bool" value="false"/>
     <property name="workspace_names" type="array">
-      <value type="string" value="   BROWSERS"/>
-      <value type="string" value="KITTY"/>
-      <value type="string" value="IDE"/>
-      <value type="string" value="SOME"/>
-      <value type="string" value="TELEGRAM"/>
-      <value type="string" value="CLEAR"/>
+      <value type="string" value="1"/>
+      <value type="string" value="2"/>
+      <value type="string" value="3"/>
+      <value type="string" value="4"/>
+      <value type="string" value="5"/>
+      <value type="string" value="6"/>
       <value type="string" value="Workspace 7"/>
       <value type="string" value="Workspace 8"/>
       <value type="string" value="Workspace 9"/>
