@@ -73,6 +73,13 @@ function rest()
         count = count + 1
     end
 
+    local tmp_file = io.open('/tmp/nvim_request.json', 'w')
+    io.output(tmp_file)
+    io.write(json)
+    io.close(tmp_file)
+
+    local session_file = neovim_open_path .. '/' .. 'session'
+
     if string.starts(command, "http GET") then
         qparam = string.gsub(json, "{", "")
         qparam = qparam.gsub(qparam, "}", "")
@@ -88,15 +95,11 @@ function rest()
         form_param = form_param.gsub(form_param, ":", "=")
         form_param = form_param.gsub(form_param, ",", " ")
         rest_command = command .. " " .. form_param
+    else
+        rest_command = 'cat /tmp/nvim_request.json | ' .. command
     end
 
-    local tmp_file = io.open('/tmp/nvim_request.json', 'w')
-    io.output(tmp_file)
-    io.write(json)
-    io.close(tmp_file)
-
-    local session_file = neovim_open_path .. '/' .. 'session'
-    local rest_command = 'cat /tmp/nvim_request.json | ' .. command .. ' --pretty format --print=hb --session=' .. session_file .. ' --timeout 8'
+    local rest_command = rest_command .. ' --pretty format --print=hb --session=' .. session_file .. ' --timeout 8'
 
     close_window_with_response()
 
