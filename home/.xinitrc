@@ -7,4 +7,5 @@ pipewire-pule &
 pipewire-media-session &
 slstatus &
 picom &
+emacs --daemon &
 exec dwm
