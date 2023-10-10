@@ -85,7 +85,8 @@ function rest()
         qparam = qparam.gsub(qparam, "}", "")
         qparam = qparam.gsub(qparam, "'", "")
         qparam = qparam.gsub(qparam, "\"", '')
-        qparam = qparam.gsub(qparam, ":", "==")
+        -- qparam = qparam.gsub(qparam, ":", "==")
+        -- qparam = qparam.gsub(qparam, "==", "==")
         qparam = qparam.gsub(qparam, ",", " ")
         rest_command = command .. " " .. qparam
     elseif string.starts(command, "http -f") then
@@ -100,6 +101,7 @@ function rest()
     end
 
     local rest_command = rest_command .. ' --pretty format --print=hb --session=' .. session_file .. ' --timeout 8'
+    print(rest_command)
 
     close_window_with_response()
 

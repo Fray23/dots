@@ -3,47 +3,78 @@
 #+STARTUP: showeverything
 #+OPTIONS: toc:2
 
-* * :toc:
+* :toc:
 - [[#auto-install-packages][auto install packages]]
 - [[#common][common]]
 - [[#main-packages][main packages]]
-  - [[#packege-settings][Packege settings]]
   - [[#evil-mode][Evil Mode]]
   - [[#general-keybindings][General keybindings]]
+  - [[#pojectile][pojectile]]
+  - [[#ivy][Ivy]]
   - [[#key-chord][key chord]]
+  - [[#sudo-edit][Sudo Edit]]
+  - [[#flycheck][flycheck]]
+- [[#keybinds][KeyBinds]]
+  - [[#buffer][buffer]]
+  - [[#project][project]]
 - [[#org-settings][ORG settings]]
   - [[#org-temo-chet-sheet][Org Temo chet sheet]]
   - [[#toc][toc]]
+- [[#lab][Lab]]
+  - [[#python][python]]
+  - [[#tree-sitter][tree-sitter]]
 - [[#decorations][decorations]]
   - [[#colorthemes][colorthemes]]
   - [[#fonts][fonts]]
+  - [[#small-packages][small packages]]
+    - [[#anzu][anzu]]
 
 * auto install packages
 #+begin_src emacs-lisp
-  (defvar my-packages
-    '(dracula-theme
-      evil
-      evil-collection
-      general
-      key-chord
-      toc-org
-      org-bullets
-      projectile
-     )
-      "A list of packages to ensure are installed at launch.")
+(require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives
+           '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(package-initialize)
 
-    (defun my-packages-installed-p ()
-      (let ((all-installed t))
-        (dolist (p my-packages all-installed)
-          (unless (package-installed-p p)
-            (setq all-installed nil)))))
+(defvar my-packages
+  '(dracula-theme
+    evil
+    evil-collection
+    general
+    key-chord
+    toc-org
+    org-bullets
+    projectile
+    sudo-edit
+    ivy
+    counsel
 
-    (unless (my-packages-installed-p)
-      (message "%s" "Refreshing package database...")
-      (package-refresh-contents)
-      (dolist (p my-packages)
-        (unless (package-installed-p p)
-          (package-install p))))
+    ;; decorations
+    anzu
+
+    tree-sitter
+    neotree
+    tree-sitter-langs
+    flycheck
+    flycheck-pycheckers
+    ;; python
+    elpy
+   )
+    "A list of packages to ensure are installed at launch.")
+
+  ;;(defun my-packages-installed-p ()
+  ;;  (let ((all-installed t))
+  ;;    (dolist (p my-packages all-installed)
+  ;;      (unless (package-installed-p p)
+  ;;        (setq all-installed nil)))))
+
+  ;;(unless (my-packages-installed-p)
+  ;;  (message "%s" "Refreshing package database...")
+  ;;  (package-refresh-contents)
+  ;;  (dolist (p my-packages)
+  ;;    (unless (package-installed-p p)
+  ;;      (package-install p))))
 #+end_src
 
 * common
@@ -57,37 +88,24 @@
 #+end_src
 
 * main packages
-** Packege settings
-
-#+begin_src emacs-lisp
-
-  (require 'package)
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-    (add-to-list 'package-archives
-	     '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-  (package-initialize)
- 
-#+end_src
-
-
 ** Evil Mode
 https://github.com/emacs-evil/evil
 
 #+begin_src emacs-lisp
+
   ;; evil, evil-collection
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
 
-(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-(setq evil-want-keybinding nil)
-(setq evil-vsplit-window-right t)
-(setq evil-split-window-below t)
+  (setq evil-want-C-u-scroll t)
 
-(setq evil-want-C-u-scroll t)
+  (require 'evil)
+  (evil-mode 1)
 
-(require 'evil)
-(evil-mode 1)
-
-(setq evil-collection-mode-list '(dashboard dired ibuffer))
-(evil-collection-init)
+  (setq evil-collection-mode-list '(dashboard dired ibuffer))
+  (evil-collection-init)
 #+end_src
 
 
@@ -95,39 +113,100 @@ https://github.com/emacs-evil/evil
 https://github.com/noctuid/general.el
 
 #+begin_src emacs-lisp
-(require 'general)
-(general-evil-setup)
+  (require 'general)
+  (general-evil-setup)
 
-(general-create-definer spc-leader
-  :states '(normal insert visual emacs)
-  :keymaps 'override
-  :prefix "SPC" ;; set leader
-  :global-prefix "M-SPC") ;; access leader in insert mode
-
-(spc-leader
-  "b" '(:ignore t :wk "buffer")
-  "b b" '(switch-to-buffer :wk "Switch buffer")
-  "b i" '(ibuffer :wk "Switch buffer")
-  "b k" '(kill-this-buffer :wk "Kill this buffer")
-  "b n" 'next-buffer
-  "b p" '(previous-buffer :wk "Previous buffer")
-  "b r" '(revert-buffer :wk "Reload buffer"))
-(spc-leader
-  "h" '(:ignore t:wk "Help")
-  "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
+  (general-create-definer spc-leader
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC" ;; set leader
+    :global-prefix "M-SPC") ;; access leader in insert mode
 #+end_src
+
+** pojectile
+#+begin_src emacs-lisp
+  (projectile-mode +1)
+  (setq projectile-completion-system 'ivy)
+#+end_src
+
+** Ivy
+#+begin_src emacs-lisp
+  (ivy-mode +1)
+  (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+  (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
+#+end_src
+
 
 ** key chord
 #+begin_src emacs-lisp
-(require 'key-chord)
-(key-chord-mode 1)
-(require 'evil)
+  (require 'key-chord)
+  (key-chord-mode 1)
+  (require 'evil)
 
-(setq key-chord-two-keys-delay 0.03) ; 30ms
-  (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+  (setq key-chord-two-keys-delay 0.04) ; 30ms
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
 
-(setq key-chord-two-keys-delay 0.03) ; 30ms
-  (key-chord-define evil-insert-state-map "kj" 'evil-normal-state)
+  (setq key-chord-two-keys-delay 0.04) ; 30ms
+    (key-chord-define evil-insert-state-map "kj" 'evil-normal-state)
+#+end_src
+
+** Sudo Edit
+#+begin_src emacs-lisp
+  (require 'sudo-edit)
+  (spc-leader
+    "s" '(sudo-edit :wk "sudo-edit"))
+#+end_src
+
+** flycheck
+#+begin_src emacs-lisp
+    ;; (when (require 'flycheck nil t)
+    ;;   (flycheck-add-next-checker 'python-flake8 'python-pylint)
+    ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+  (global-flycheck-mode 1)
+  (with-eval-after-load 'flycheck
+    (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+  (flycheck-add-next-checker 'python-flake8 'python-pylint)
+
+  ;; (flycheck-add-next-checker 'python-mypy 'python-pylint)
+#+end_src
+
+* KeyBinds
+** buffer
+#+begin_src emacs-lisp
+  (spc-leader
+    "b" '(:ignore t :wk "buffer")
+    "b b" '(switch-to-buffer :wk "Switch buffer")
+    "b k" '(kill-this-buffer :wk "Kill this buffer")
+    "b r" '(revert-buffer :wk "Reload buffer"))
+
+  (spc-leader 
+    "TAB" '(:ignore t :wk "?")
+    "TAB TAB" '(comment-line :wk "comment line"))
+
+  (spc-leader
+    "h" '(:ignore t:wk "Help")
+    "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
+
+  (spc-leader
+    "e" '(:ignore t:wk "evil")
+    "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
+#+end_src
+** project
+#+begin_src emacs-lisp
+(spc-leader
+  "SPC" '(counsel-fzf :wk "find file")
+  "." '(swiper :wk "swiper")
+  "p" '(:ignore t :wk "projectile")
+  "p a" '(projectile-add-known-project :wk "add project")
+  "p s" '(projectile-switch-project :wk "switch project")
+  "p g" '(projectile-grep :wk "project tile grep")
+
+  "b i" '(projectile-ibuffer :wk "Switch buffer")
+  "b n" '(projectile-next-project-buffer :wk "next project buffer")
+  "b p" '(projectile-previous-project-buffer :wk "Previous buffer"))
+
 #+end_src
 
 
@@ -148,38 +227,48 @@ https://github.com/noctuid/general.el
 
 ** toc
 #+begin_src emacs-lisp
-(require 'toc-org nil t)
-   (add-hook 'org-mode-hook 'toc-org-enable)
-   (add-hook 'org-mode-hook 'org-indent-mode)
+  (require 'toc-org nil t)
+     (add-hook 'org-mode-hook 'toc-org-enable)
+     (add-hook 'org-mode-hook 'org-indent-mode)
+     (setq toc-org-max-depth 3)
 
-(require 'org-bullets)
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (require 'org-bullets)
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-(require 'org-bullets)
-  (which-key-mode 1)
-    (setq which-key-side-window-location 'bottom
-    which-key-sort-order #'which-key-key-order-alpha
-    which-key-sort-uppercase-first nil
-    which-key-add-column-padding 1
-    which-key-max-display-columns nil
-    which-key-min-display-lines 6
-    which-key-side-window-slot -10
-    which-key-side-window-max-height 0.25
-    which-key-idle-delay 0.8
-    which-key-max-description-length 25
-    which-key-allow-imprecise-window-fit t
-    which-key-separator " → " )
+  (require 'org-bullets)
+    (which-key-mode 1)
 
-(electric-indent-mode -1)
+      (setq which-key-min-display-lines 10)
+      (setq which-key-side-window-location 'bottom
+      which-key-sort-order #'which-key-key-order-alpha
+      which-key-separator " → " )
 
-(require 'org-tempo)
+  (require 'org-tempo)
+
+  (electric-indent-mode -1)
+  (setq org-edit-src-content-indentation 0)
 #+end_src
+
+* Lab
+** python
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook #'elpy-enable 1)
+  (add-hook 'python-mode-hook #'elpy-mode 1)
+  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
+#+end_src
+** tree-sitter
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook #'tree-sitter-mode +1)
+  (add-hook 'python-mode-hook #'tree-sitter-hl-mode +1)
+#+end_src
+
 
 * decorations
 ** colorthemes
 
 #+begin_src emacs-lisp
-  (load-theme 'dracula t)
+(load-theme 'dracula t)
+(add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
 #+end_src
 
 ** fonts
@@ -188,14 +277,17 @@ https://github.com/noctuid/general.el
   (set-face-attribute 'default nil
     :font "JetBrainsMonoNL Nerd Font"
     :height 150 ;; 110
+    ;; :height 110 ;; 110
     :weight 'medium)
   (set-face-attribute 'variable-pitch nil
     :font "JetBrainsMonoNL Nerd Font"
     :height 160 ;; 120
+    ;; :height 120 ;; 120
     :weight 'medium)
   (set-face-attribute 'fixed-pitch nil
     :font "JetBrainsMonoNL Nerd Font"
     :height 150 ;; 110
+    ;;:height 110 ;; 110
     :weight 'medium)
   ;; Makes commented text and keywords italics.
   ;; This is working in emacsclient but not emacs.
@@ -213,4 +305,12 @@ https://github.com/noctuid/general.el
   ;; Uncomment the following line if line spacing needs adjusting.
   (setq-default line-spacing 0.12)
 
+#+end_src
+
+** small packages
+*** anzu
+https://github.com/emacsorphanage/anzu
+anzu.el provides a minor mode which displays current match and total matches information in the mode-line in various search modes.
+#+begin_src emacs-lisp
+  (global-anzu-mode +1)
 #+end_src

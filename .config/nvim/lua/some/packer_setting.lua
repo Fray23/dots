@@ -1,5 +1,5 @@
 vim.g.everforest_background = 'hard'
-vim.cmd('colorscheme everforest')
+-- vim.cmd('colorscheme everforest')
 -- vim.cmd('colorscheme nord')
 -- vim.cmd('colorscheme base16-black-metal')
 -- vim.cmd('colorscheme doom-one')
@@ -24,10 +24,9 @@ vim.cmd("autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror 
 -- Close the tab if NERDTree is the only window remaining in it.
 vim.cmd("autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif")
 -- Open the existing NERDTree on each new tab.
--- vim.cmd("autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif")
 
 vim.g['NERDTreeShowHidden'] = 1
-vim.g['NERDTreeWinSize'] = 40
+vim.g['NERDTreeWinSize'] = 50
 
 -- lualine
 vim.o.showtabline = 2
@@ -112,7 +111,7 @@ end, {remap=true})
 -- Настройка символов, для которых будет автоматически вставляться закрывающая скобка
 require('nvim-autopairs').setup{}
 
-require("no-neck-pain").setup({ width = 190 })
+require("no-neck-pain").setup({ width = 150 })
 -- require("no-neck-pain").setup({
 --     buffers = {
 --         right = {

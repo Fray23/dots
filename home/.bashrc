@@ -6,6 +6,7 @@
 [[ $- != *i* ]] && return
 
 export PATH="$HOME/.config/emacs/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'

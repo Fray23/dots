@@ -1,10 +1,6 @@
 #!/bin/sh
-# uncomment for hidpi
-# xrdb ~/.Xresources
+xrdb ~/.Xresources
 xrandr --auto
-pipewire &
-pipewire-pule &
-pipewire-media-session &
 slstatus &
 picom &
 emacs --daemon &

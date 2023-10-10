@@ -20,12 +20,10 @@ vim
 virt-manager
 vlc
 xclip
-moc
 net-tools
 msr-tools
 make
 drawing
-mdcat
 libreoffice-still
 uwufetch
 ttf-jetbrains-mono-nerd
@@ -40,3 +38,6 @@ ttf-hanazono
 papirus-icon-theme
 noto-fonts-emoji
 xarchiver
+lxappearance
+qt5ct
+fzf
