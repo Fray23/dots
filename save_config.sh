@@ -4,6 +4,8 @@ cp ~/.Xresources for_hidpi/
 cp ~/.config/chromium-flags.conf for_hidpi/
 
 cp ~/start.sh home/
+cp ~/x.sh home/
+cp ~/create_backup.sh home/
 cp ~/.xinitrc home/
 
 cp ~/.bashrc home/
