@@ -1,9 +1,9 @@
 vim.g.everforest_background = 'hard'
 -- vim.cmd('colorscheme everforest')
--- vim.cmd('colorscheme nord')
+vim.cmd('colorscheme nord')
 -- vim.cmd('colorscheme base16-black-metal')
 -- vim.cmd('colorscheme doom-one')
-vim.cmd('colorscheme dracula')
+-- vim.cmd('colorscheme dracula')
 vim.cmd('set background=dark')
 -- vim.cmd('colorscheme onedark')
 
@@ -96,15 +96,15 @@ startup = require("startup") -- put theme name here
 startup.setup({theme = "dashboard"})
 
 -- hob
-local hop = require('hop')
-hop.setup()
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end, {remap=true})
-vim.keymap.set('', 'F', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end, {remap=true})
+-- local hop = require('hop')
+-- hop.setup()
+-- local directions = require('hop.hint').HintDirection
+-- vim.keymap.set('', 'f', function()
+--   hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+-- end, {remap=true})
+-- vim.keymap.set('', 'F', function()
+--   hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+-- end, {remap=true})
 
 
 -- auto pairs
@@ -112,13 +112,7 @@ end, {remap=true})
 require('nvim-autopairs').setup{}
 
 require("no-neck-pain").setup({ width = 150 })
--- require("no-neck-pain").setup({
---     buffers = {
---         right = {
---             enabled = false,
---         },
---     },
--- })
+
 
 -- harpoon
 print(vim.api.nvim_win_get_width(0))
@@ -130,14 +124,6 @@ require("harpoon").setup({
 })
 
 
-
--- require("indent_blankline").setup {
---     -- for example, context is off by default, use this to turn it on
---     show_current_context = true,
---     show_current_context_start = true,
--- }
-
--- hologram
 require'mind'.setup()
 
 -- ----------------------

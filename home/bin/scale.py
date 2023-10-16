@@ -1,3 +1,4 @@
+#!/bin/python
 import sys
 
 def replace_line_in_file(filename, old_line, new_line):

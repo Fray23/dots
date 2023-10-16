@@ -12,22 +12,39 @@
   - [[#pojectile][pojectile]]
   - [[#ivy][Ivy]]
   - [[#key-chord][key chord]]
-  - [[#sudo-edit][Sudo Edit]]
   - [[#flycheck][flycheck]]
+  - [[#dired][dired]]
+  - [[#magit][magit]]
+  - [[#org-download][org-download]]
+  - [[#restclient][restclient]]
+  - [[#persp-mode][persp-mode]]
 - [[#keybinds][KeyBinds]]
-  - [[#buffer][buffer]]
+  - [[#marks][marks]]
+  - [[#buffer--bookmarks--harpoon][buffer & bookmarks & harpoon]]
+  - [[#tabs-and-terminag][tabs and terminag]]
+  - [[#ivy-1][ivy]]
   - [[#project][project]]
+  - [[#dired-1][DIRED]]
+  - [[#sudo-edit--code][Sudo Edit & code]]
+  - [[#org-mode][ORG mode]]
+  - [[#restclient-1][Restclient]]
+  - [[#vterm][vterm]]
+  - [[#persp-mode-1][Persp-mode]]
 - [[#org-settings][ORG settings]]
   - [[#org-temo-chet-sheet][Org Temo chet sheet]]
   - [[#toc][toc]]
-- [[#lab][Lab]]
+- [[#programming][PROGRAMMING]]
   - [[#python][python]]
   - [[#tree-sitter][tree-sitter]]
 - [[#decorations][decorations]]
   - [[#colorthemes][colorthemes]]
+  - [[#diff][diff]]
   - [[#fonts][fonts]]
-  - [[#small-packages][small packages]]
-    - [[#anzu][anzu]]
+  - [[#icons][icons]]
+  - [[#rainbow-mode][rainbow mode]]
+  - [[#evil-snipe][evil-snipe]]
+  - [[#diredfl][diredfl]]
+  - [[#opacity][opacity]]
 
 * auto install packages
 #+begin_src emacs-lisp
@@ -38,7 +55,7 @@
 (package-initialize)
 
 (defvar my-packages
-  '(dracula-theme
+  '(doom-themes
     evil
     evil-collection
     general
@@ -49,42 +66,76 @@
     sudo-edit
     ivy
     counsel
+    harpoon
+    bm
+    vterm
+    org-download
+    restclient
+    persp-mode ;; watch docs
 
     ;; decorations
-    anzu
+    rainbow-mode
+    diredfl
+    all-the-icons
+    all-the-icons-dired ;; M-x all-the-icons-install-fonts
+    centered-window
 
     tree-sitter
+    diff-hl
     neotree
+    dired-subtree
     tree-sitter-langs
     flycheck
     flycheck-pycheckers
     ;; python
     elpy
-   )
-    "A list of packages to ensure are installed at launch.")
+    haskell-mode
 
-  ;;(defun my-packages-installed-p ()
-  ;;  (let ((all-installed t))
-  ;;    (dolist (p my-packages all-installed)
-  ;;      (unless (package-installed-p p)
-  ;;        (setq all-installed nil)))))
+    ;; apps
+    image-dired+
+    helpful
+   ))
 
-  ;;(unless (my-packages-installed-p)
-  ;;  (message "%s" "Refreshing package database...")
-  ;;  (package-refresh-contents)
-  ;;  (dolist (p my-packages)
-  ;;    (unless (package-installed-p p)
-  ;;      (package-install p))))
+  (defun my-packages-installed-p ()
+    (let ((all-installed t))
+      (dolist (p my-packages all-installed)
+        (unless (package-installed-p p)
+          (setq all-installed nil)))))
+  
+  (defun install-or-refresh-packages ()
+    (interactive)
+    (unless (my-packages-installed-p)
+        (message "%s" "Refreshing package database...")
+        (package-refresh-contents)
+        (dolist (p my-packages)
+          (unless (package-installed-p p)
+            (package-install p))))
+  )
 #+end_src
+
 
 * common
 #+begin_src emacs-lisp
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(menu-bar-mode -1)                              ;  Отключение меню-бара
+(tool-bar-mode -1)                              ;  Отключение панели инструментов
+(scroll-bar-mode -1)                            ;  Отключение вертикальной полосы прокрутки
+(show-paren-mode 1)                             ;  Включение подсветки соответствующих скобок
+                                                  
+(setq make-backup-files nil)                    ;  Отключение создания файлов резервных копий (файлов с суффиксом ~)
+(setq auto-save-default nil)                    ;  Отключение автосохранения и создания файлов с префиксом .#
+(setq inhibit-startup-screen t)                 ;  Отключение стартового экрана при запуске Emacs
+                                                  
+(setq-default isearch-lazy-highlight t)         ;  Включение "ленивой" подсветки при поиске
+                                                  
+(global-visual-line-mode t)                     ;  Включение переноса строк вместо горизонтального скролла
+(setq-default display-line-numbers 'relative)   ;  Включение относительных номеров строк
 
-(global-visual-line-mode t)
-(setq-default display-line-numbers 'relative)
+(prefer-coding-system 'utf-8)                   ;  Установка предпочтительной системы кодирования на UTF-8
+(set-default-coding-systems 'utf-8)             ;  Установка системы кодирования по умолчанию на UTF-8
+(set-terminal-coding-system 'utf-8)             ;  Установка системы кодирования терминала на UTF-8
+(set-keyboard-coding-system 'utf-8)             ;  Установка системы кодирования клавиатуры на UTF-8
+(setq default-buffer-file-coding-system 'utf-8) ;  Установка системы кодирования файловых буферов на UTF-8
+(setq scroll-conservatively 10000)              ;  Установка плавного скроллинга без резкого перемещения экрана
 #+end_src
 
 * main packages
@@ -93,19 +144,19 @@ https://github.com/emacs-evil/evil
 
 #+begin_src emacs-lisp
 
-  ;; evil, evil-collection
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  (setq evil-vsplit-window-right t)
-  (setq evil-split-window-below t)
+;; evil, evil-collection
+(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+(setq evil-want-keybinding nil)
+(setq evil-vsplit-window-right t)
+(setq evil-split-window-below t)
 
-  (setq evil-want-C-u-scroll t)
+(setq evil-want-C-u-scroll t)
 
-  (require 'evil)
-  (evil-mode 1)
+(require 'evil)
+(evil-mode 1)
 
-  (setq evil-collection-mode-list '(dashboard dired ibuffer))
-  (evil-collection-init)
+(setq evil-collection-mode-list '(dashboard dired ibuffer))
+(evil-collection-init)
 #+end_src
 
 
@@ -131,68 +182,141 @@ https://github.com/noctuid/general.el
 
 ** Ivy
 #+begin_src emacs-lisp
-  (ivy-mode +1)
-  (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
-  (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
+(ivy-mode +1)
 #+end_src
-
 
 ** key chord
 #+begin_src emacs-lisp
-  (require 'key-chord)
-  (key-chord-mode 1)
-  (require 'evil)
-
-  (setq key-chord-two-keys-delay 0.04) ; 30ms
-    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
-
-  (setq key-chord-two-keys-delay 0.04) ; 30ms
-    (key-chord-define evil-insert-state-map "kj" 'evil-normal-state)
+(require 'key-chord)
+(key-chord-mode 1)
+(key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
+(key-chord-define evil-insert-state-map  "kj" 'evil-normal-state)
 #+end_src
 
-** Sudo Edit
-#+begin_src emacs-lisp
-  (require 'sudo-edit)
-  (spc-leader
-    "s" '(sudo-edit :wk "sudo-edit"))
-#+end_src
 
 ** flycheck
 #+begin_src emacs-lisp
-    ;; (when (require 'flycheck nil t)
-    ;;   (flycheck-add-next-checker 'python-flake8 'python-pylint)
-    ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
-
   (global-flycheck-mode 1)
   (with-eval-after-load 'flycheck
     (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
   (flycheck-add-next-checker 'python-flake8 'python-pylint)
-
-  ;; (flycheck-add-next-checker 'python-mypy 'python-pylint)
 #+end_src
+
+** dired
+#+begin_src emacs-lisp
+(setq dired-sort-default-list '(("name" "Name" t (t)))
+                           dired-listing-switches "-alh --group-directories-first")
+
+(defun dired-open-file-in-new-tab ()
+  "Open the current file in dired in a new tab."
+  (interactive)
+  (tab-new)
+  (dired-find-file))
+
+#+end_src
+
+** magit
+#+begin_src emacs-lisp
+;; (require 'magit)
+;; (magit-mode +1)
+#+end_src
+
+** org-download
+#+begin_src emacs-lisp
+(require 'org-download)
+(setq-default org-download-image-dir "~/Pictures/foo")
+(add-hook 'dired-mode-hook 'org-download-enable)
+#+end_src
+
+** restclient
+#+begin_src emacs-lisp
+(require 'restclient)
+(add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
+#+end_src
+
+** persp-mode
+#+begin_src emacs-lisp
+(with-eval-after-load "persp-mode-autoloads"
+  (setq wg-morph-on nil) ;; switch off animation
+  (setq persp-autokill-buffer-on-remove 'kill-weak)
+  (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
+#+end_src
+
 
 * KeyBinds
-** buffer
+** marks
 #+begin_src emacs-lisp
-  (spc-leader
-    "b" '(:ignore t :wk "buffer")
-    "b b" '(switch-to-buffer :wk "Switch buffer")
-    "b k" '(kill-this-buffer :wk "Kill this buffer")
-    "b r" '(revert-buffer :wk "Reload buffer"))
-
-  (spc-leader 
-    "TAB" '(:ignore t :wk "?")
-    "TAB TAB" '(comment-line :wk "comment line"))
-
-  (spc-leader
-    "h" '(:ignore t:wk "Help")
-    "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
-
-  (spc-leader
-    "e" '(:ignore t:wk "evil")
-    "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
+(spc-leader
+  "m" '(:ignore t :wk "marks")
+  "m a" '(bm-toggle :wk "toggle mark")
+  "m n" '(bm-next :wk "next mark")
+  "m p" '(bm-previous :wk "prev mark")
+  "m s" '(bm-show :wk "show")
+  "m c" '(bm-remove-all-all-buffers :wk "claer mark"))
 #+end_src
+
+** buffer & bookmarks & harpoon
+#+begin_src emacs-lisp
+(spc-leader
+  ;; buffer
+  "b" '(:ignore t :wk "buffer")
+  "b i" '(ibuffer :wk "Switch ibuffer")
+  "b b" '(switch-to-buffer :wk "Switch buffer")
+  "b k" '(kill-this-buffer :wk "Kill this buffer")
+  ;; bookmark
+  "b s" '(bookmark-set :wk "set bookmarks")
+  "b d" '(bookmark-delete :wk "delete bookmarks")
+  "b l" '(list-bookmarks :wk "list bookmarks")
+  "b j" '(bookmark-jump :wk "list jump")
+  "b a" '(bookmark-set :wk "bookmarks set")
+
+  "b r" '(revert-buffer :wk "Reload buffer"))
+
+(spc-leader 
+  "TAB" '(:ignore t :wk "?")
+  "TAB TAB" '(comment-line :wk "comment line"))
+
+(spc-leader
+  "h" '(:ignore t :wk "help & harpoon")
+  "h a" '(harpoon-add-file :wk "add to harpoon")
+  "h c" '(harpoon-clear :wk "harboon clear")
+  "h l" '(harpoon-toggle-quick-menu :wk "toggle menu")
+  "h m" '(harpoon-quick-menu-hydra :wk "quick menu")
+  "h 1" '(harpoon-go-to-1 :wk "1")
+  "h 2" '(harpoon-go-to-2 :wk "2")
+  "h 3" '(harpoon-go-to-3 :wk "3")
+  "h 4" '(harpoon-go-to-4 :wk "4")
+  "h 5" '(harpoon-go-to-5 :wk "5")
+
+  "h d" '(:ignore t :wk "harpoon delete")
+  "h d 1" '(harpoon-delete-1 :wk "1")
+  "h d 2" '(harpoon-delete-2 :wk "2")
+  "h d 3" '(harpoon-delete-3 :wk "3")
+  "h d 4" '(harpoon-delete-4 :wk "4")
+  "h d 5" '(harpoon-delete-5 :wk "5")
+
+  "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
+#+end_src
+
+** tabs and terminag
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-l") 'tab-next)
+(global-set-key (kbd "C-h") 'tab-previous)
+(global-set-key (kbd "C-c k") 'tab-close)
+
+(spc-leader
+    "t" '(:ignore t :wk "tab and terminal")
+    "t t" '(vterm :wk "vterm")
+    "t n" '(tab-bar-new-tab :wk "tab")
+    "t c" '(tab-close :wk "close tab"))
+#+end_src
+
+** ivy
+#+begin_src emacs-lisp
+(define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+(define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
+#+end_src
+
 ** project
 #+begin_src emacs-lisp
 (spc-leader
@@ -205,9 +329,112 @@ https://github.com/noctuid/general.el
 
   "b i" '(projectile-ibuffer :wk "Switch buffer")
   "b n" '(projectile-next-project-buffer :wk "next project buffer")
-  "b p" '(projectile-previous-project-buffer :wk "Previous buffer"))
+  "b p" '(projectile-previous-project-buffer :wk "previous project buffer"))
 
 #+end_src
+
+** DIRED
+*** default dired
+#+begin_src emacs-lisp
+(spc-leader
+  "d" '(:ignore t :wk "dired")
+  "d o" '(dired :wk "open dired")
+
+  "d c" '(:ignore t :wk "copy/crete")
+  "d c c" '(dired-do-copy :wk "copy")
+  "d c d" '(dired-create-directory :wk "create dir")
+  "d c f" '(dired-create-empty-file :wk "crete file")
+  "d r" '(dired-do-rename :wk "renema & move")
+
+  "d p" '(:ignore t :wk "permissions")
+  "d p p" '(dired-do-chmod :wk "chmod")
+  "d p o" '(dired-do-chown :wk "chown")
+
+  "d h" '(dired-hide-details-mode :wk "hide/show deteils")
+)
+
+(evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+#+end_src
+
+открыть файл в вертикально разделенном экране
+#+begin_src emacs-lisp
+(defun dired-open-split-horizontal ()
+  "In dired, open current file in another window if exists, otherwise split window horizontally."
+  (interactive)
+  ;; Сохраняем путь текущего файла
+  (let ((current-file (dired-get-file-for-visit)))
+    ;; Проверяем, есть ли другое окно
+    (if (one-window-p)
+        (split-window-horizontally))
+    ;; Переключаемся на другое окно
+    (other-window 1)
+    ;; Открываем файл или каталог, используя сохраненный путь
+    (find-file current-file))
+    (other-window 1))
+
+(define-key dired-mode-map (kbd "s") 'dired-open-in-split-window)
+
+
+(evil-define-key 'normal dired-mode-map (kbd "s") 'dired-open-split-horizontal)
+#+end_src
+
+*** dired subtree
+#+begin_src emacs-lisp
+(require 'dired-subtree)
+
+(evil-define-key 'normal dired-mode-map (kbd "i") 'dired-subtree-insert)
+(evil-define-key 'normal dired-mode-map (kbd "r") 'dired-subtree-remove)
+(evil-define-key 'normal dired-mode-map (kbd "o") 'dired-open-file-in-new-tab)
+
+#+end_src
+
+** Sudo Edit & code
+#+begin_src emacs-lisp
+(require 'sudo-edit)
+(spc-leader
+  "c" '(:ignore t :wk "code")
+  "c s" '(sudo-edit :wk "sudo-edit")
+  "s" '(:ignore t :wk "split window")
+  "s h" '(split-window-right :wk "split window horizontaly")
+  "s v" '(split-window-below :wk "split window verticalty"))
+#+end_src
+
+** ORG mode
+#+begin_src emacs-lisp
+(spc-leader
+  "o" '(:ignore t :wk "org mode")
+  "o c" '(org-time-stamp :wk "calendar paste date")
+  "o r" '(org-shiftmetaright :wk "move metric right")
+  "o l" '(org-shiftmetaleft :wk "move metric left")
+  "o t" '(org-tree-to-indirect-buffer :wk "tree to inderect buffer")
+  "o o" '(org-cycle-global :wk "org cycle global")
+)
+#+end_src
+
+** Restclient
+#+begin_src emacs-lisp
+(spc-leader
+  "r" '(:ignore t :wk "rest client")
+  "r s" '(restclient-http-send-current-stay-in-window :wk "send http"))
+#+end_src
+
+** vterm
+#+begin_src emacs-lisp
+(evil-define-key 'normal vterm-mode-map (kbd "p") 'vterm-yank)
+#+end_src
+
+** Persp-mode
+#+begin_src emacs-lisp
+(spc-leader
+  "w" '(:ignore t :wk "workspace")
+  "w a" '(persp-add-new :wk "switch workspace")
+  "w s" '(persp-switch :wk "switch workspace")
+  "w n" '(persp-next :wk "next workspace")
+  "w p" '(persp-prev :wk "prev workspace")
+  "w k" '(persp-kill :wk "kill workspace")
+)
+#+end_src
+
 
 
 * ORG settings
@@ -227,34 +454,39 @@ https://github.com/noctuid/general.el
 
 ** toc
 #+begin_src emacs-lisp
-  (require 'toc-org nil t)
-     (add-hook 'org-mode-hook 'toc-org-enable)
-     (add-hook 'org-mode-hook 'org-indent-mode)
-     (setq toc-org-max-depth 3)
+(require 'toc-org nil t)
+   (add-hook 'org-mode-hook 'toc-org-enable)
+   (add-hook 'org-mode-hook 'org-indent-mode)
+   (setq toc-org-max-depth 2)
 
-  (require 'org-bullets)
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(require 'org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-  (require 'org-bullets)
-    (which-key-mode 1)
+(require 'org-bullets)
+  (which-key-mode 1)
 
-      (setq which-key-min-display-lines 10)
-      (setq which-key-side-window-location 'bottom
-      which-key-sort-order #'which-key-key-order-alpha
-      which-key-separator " → " )
+    (setq which-key-min-display-lines 10)
+    (setq which-key-side-window-location 'bottom
+    which-key-sort-order #'which-key-key-order-alpha
+    which-key-separator " → " )
 
-  (require 'org-tempo)
+(require 'org-tempo)
 
-  (electric-indent-mode -1)
-  (setq org-edit-src-content-indentation 0)
+;;(electric-indent-mode -1)
+(setq org-edit-src-content-indentation 0)
 #+end_src
 
-* Lab
+* PROGRAMMING
 ** python
 #+begin_src emacs-lisp
-  (add-hook 'python-mode-hook #'elpy-enable 1)
-  (add-hook 'python-mode-hook #'elpy-mode 1)
-  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (setq tab-width 4)
+            (setq python-indent-offset 4)
+            (elpy-enable)
+            (elpy-mode)
+            (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))))
 #+end_src
 ** tree-sitter
 #+begin_src emacs-lisp
@@ -265,15 +497,18 @@ https://github.com/noctuid/general.el
 
 * decorations
 ** colorthemes
-
 #+begin_src emacs-lisp
-(load-theme 'dracula t)
-(add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
+(load-theme 'doom-nord t)
+;; (load-theme 'dracula t)
+#+end_src
+
+** diff
+#+begin_src emacs-lisp
+(global-diff-hl-mode +1)
 #+end_src
 
 ** fonts
 #+begin_src emacs-lisp
-
   (set-face-attribute 'default nil
     :font "JetBrainsMonoNL Nerd Font"
     :height 150 ;; 110
@@ -304,13 +539,96 @@ https://github.com/noctuid/general.el
 
   ;; Uncomment the following line if line spacing needs adjusting.
   (setq-default line-spacing 0.12)
-
 #+end_src
 
-** small packages
-*** anzu
-https://github.com/emacsorphanage/anzu
-anzu.el provides a minor mode which displays current match and total matches information in the mode-line in various search modes.
+
+** icons
 #+begin_src emacs-lisp
-  (global-anzu-mode +1)
+(require 'all-the-icons)
+(require 'all-the-icons-dired)
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+#+end_src
+
+** rainbow mode
+This minor mode sets background color to strings that match color
+names, e.g. #0000ff is displayed in white with a blue background.
+#+begin_src emacs-lisp
+(require 'rainbow-mode)
+(add-hook 'org-mode-hook 'rainbow-mode)
+(add-hook 'prog-mode-hook 'rainbow-mode)
+#+end_src
+
+** evil-snipe
+#+begin_src emacs-lisp
+(require 'evil-snipe)
+(evil-snipe-mode +1)
+(evil-snipe-override-mode +1)
+#+end_src
+
+** diredfl
+#+begin_src emacs-lisp
+(require 'diredfl)
+(diredfl-global-mode 1)
+
+(custom-set-faces
+ '(diredfl-dir-heading ((t (:foreground "#8FBCBB"))))
+ '(diredfl-number ((t (:foreground "#EBCB8B"))))
+
+ ;; Директории
+ '(diredfl-dir-name ((t (:foreground "#5E81AC"))))
+ 
+ ;; Символические ссылки
+ '(diredfl-symlink ((t (:foreground "#88C0D0"))))
+
+ ;; Исполняемые файлы
+ '(diredfl-exec-priv ((t (:foreground "#A3BE8C"))))
+ '(diredfl-executable-tag ((t (:foreground "#A3BE8C"))))
+
+ ;; Обычные файлы
+ '(diredfl-file-name ((t (:foreground "white"))))
+ '(diredfl-file-suffix ((t (:foreground "#D8DEE9"))))
+
+ ;; Сжатые файлы и архивы
+ '(diredfl-compressed-file-suffix ((t (:foreground "#B48EAD"))))
+ '(diredfl-compressed-file-name ((t (:foreground "#B48EAD"))))
+
+ ;; Специальные файлы (например, устройства)
+ '(diredfl-device ((t (:foreground "#EBCB8B"))))
+ '(diredfl-special ((t (:foreground "#EBCB8B"))))
+
+ ;; Устаревшие и удаленные файлы
+ '(diredfl-deletion ((t (:foreground "#BF616A"))))
+ '(diredfl-deletion-file-name ((t (:foreground "#BF616A"))))
+ '(diredfl-ignored-file-name ((t (:foreground "light gray"))))
+
+ ;; Назначенные файлы
+ '(diredfl-flag-mark ((t (:foreground "#EBCB8B"))))
+ '(diredfl-flag-mark-line ((t (:background "#EBCB8B" :foreground "#434C5E"))))
+ '(diredfl-sock-priv ((t (:foreground "#B48EAD"))))
+
+ ;; Некоторые другие привилегии
+ '(diredfl-no-priv ((t (:foreground "#88C0D0"))))
+ '(diredfl-other-priv ((t (:foreground "#81A1C1"))))
+ '(diredfl-rare-priv ((t (:foreground "#81A1C1"))))
+ '(diredfl-read-priv ((t (:foreground "#5E81AC"))))
+ '(diredfl-write-priv ((t (:foreground "#5E81AC"))))
+ )
+#+end_src
+
+*** org chckbox hl
+#+begin_src emacs-lisp
+(defface org-checkbox-done-text
+     '((t (:inherit org-done)))
+     "Face for the text part of a checked org-mode checkbox.")
+ 
+ (font-lock-add-keywords
+  'org-mode
+  `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-checkbox-done-text prepend))
+  'append)
+#+end_src
+
+** opacity
+#+begin_src emacs-listp
+(set-frame-parameter nil 'alpha-background 80)
+(add-to-list 'default-frame-alist '(alpha-background . 80))
 #+end_src
