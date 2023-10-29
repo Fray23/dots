@@ -18,7 +18,10 @@
   - [[#org-download][org-download]]
   - [[#restclient][restclient]]
   - [[#persp-mode][persp-mode]]
+  - [[#doom-modeline][doom-modeline]]
 - [[#keybinds][KeyBinds]]
+  - [[#global][global]]
+  - [[#resize-window][resize window]]
   - [[#marks][marks]]
   - [[#buffer--bookmarks--harpoon][buffer & bookmarks & harpoon]]
   - [[#tabs-and-terminag][tabs and terminag]]
@@ -28,8 +31,8 @@
   - [[#sudo-edit--code][Sudo Edit & code]]
   - [[#org-mode][ORG mode]]
   - [[#restclient-1][Restclient]]
-  - [[#vterm][vterm]]
   - [[#persp-mode-1][Persp-mode]]
+  - [[#magit-1][Magit]]
 - [[#org-settings][ORG settings]]
   - [[#org-temo-chet-sheet][Org Temo chet sheet]]
   - [[#toc][toc]]
@@ -54,7 +57,7 @@
            '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
-(defvar my-packages
+(defvar my-required-packages
   '(doom-themes
     evil
     evil-collection
@@ -96,46 +99,39 @@
     helpful
    ))
 
-  (defun my-packages-installed-p ()
-    (let ((all-installed t))
-      (dolist (p my-packages all-installed)
-        (unless (package-installed-p p)
-          (setq all-installed nil)))))
-  
-  (defun install-or-refresh-packages ()
-    (interactive)
-    (unless (my-packages-installed-p)
-        (message "%s" "Refreshing package database...")
-        (package-refresh-contents)
-        (dolist (p my-packages)
-          (unless (package-installed-p p)
-            (package-install p))))
-  )
+  ;; Список пакетов для установки.
+
+;; Установите недостающие пакеты.
+;; (dolist (p my-required-packages)
+;;   (unless (package-installed-p p)
+;;     (package-install p)))
 #+end_src
 
 
 * common
 #+begin_src emacs-lisp
-(menu-bar-mode -1)                              ;  Отключение меню-бара
-(tool-bar-mode -1)                              ;  Отключение панели инструментов
-(scroll-bar-mode -1)                            ;  Отключение вертикальной полосы прокрутки
-(show-paren-mode 1)                             ;  Включение подсветки соответствующих скобок
-                                                  
-(setq make-backup-files nil)                    ;  Отключение создания файлов резервных копий (файлов с суффиксом ~)
-(setq auto-save-default nil)                    ;  Отключение автосохранения и создания файлов с префиксом .#
-(setq inhibit-startup-screen t)                 ;  Отключение стартового экрана при запуске Emacs
-                                                  
-(setq-default isearch-lazy-highlight t)         ;  Включение "ленивой" подсветки при поиске
-                                                  
-(global-visual-line-mode t)                     ;  Включение переноса строк вместо горизонтального скролла
-(setq-default display-line-numbers 'relative)   ;  Включение относительных номеров строк
+(menu-bar-mode -1)                                        ;  Отключение меню-бара
+(tool-bar-mode -1)                                        ;  Отключение панели инструментов
+(scroll-bar-mode -1)                                      ;  Отключение вертикальной полосы прокрутки
+(show-paren-mode 1)                                       ;  Включение подсветки соответствующих скобок
+                                                            
+(setq make-backup-files nil)                              ;  Отключение создания файлов резервных копий (файлов с суффиксом ~)
+(setq auto-save-default nil)                              ;  Отключение автосохранения и создания файлов с префиксом .#
+(setq inhibit-startup-screen t)                           ;  Отключение стартового экрана при запуске Emacs
+                                                            
+(setq-default isearch-lazy-highlight t)                   ;  Включение "ленивой" подсветки при поиске
+                                                            
+(global-visual-line-mode t)                               ;  Включение переноса строк вместо горизонтального скролла
+(setq-default display-line-numbers 'relative)             ;  Включение относительных номеров строк
 
-(prefer-coding-system 'utf-8)                   ;  Установка предпочтительной системы кодирования на UTF-8
-(set-default-coding-systems 'utf-8)             ;  Установка системы кодирования по умолчанию на UTF-8
-(set-terminal-coding-system 'utf-8)             ;  Установка системы кодирования терминала на UTF-8
-(set-keyboard-coding-system 'utf-8)             ;  Установка системы кодирования клавиатуры на UTF-8
-(setq default-buffer-file-coding-system 'utf-8) ;  Установка системы кодирования файловых буферов на UTF-8
-(setq scroll-conservatively 10000)              ;  Установка плавного скроллинга без резкого перемещения экрана
+(prefer-coding-system 'utf-8)                             ;  Установка предпочтительной системы кодирования на UTF-8
+(set-default-coding-systems 'utf-8)                       ;  Установка системы кодирования по умолчанию на UTF-8
+(set-terminal-coding-system 'utf-8)                       ;  Установка системы кодирования терминала на UTF-8
+(set-keyboard-coding-system 'utf-8)                       ;  Установка системы кодирования клавиатуры на UTF-8
+(setq default-buffer-file-coding-system 'utf-8)           ;  Установка системы кодирования файловых буферов на UTF-8
+(setq scroll-conservatively 10000)                        ;  Установка плавного скроллинга без резкого перемещения экрана
+(electric-pair-mode 1)                                    ;  автоматически закрывать скопки
+(define-key evil-normal-state-map "p" 'evil-paste-before) ;  не копировать после вставки
 #+end_src
 
 * main packages
@@ -193,13 +189,14 @@ https://github.com/noctuid/general.el
 (key-chord-define evil-insert-state-map  "kj" 'evil-normal-state)
 #+end_src
 
-
 ** flycheck
 #+begin_src emacs-lisp
-  (global-flycheck-mode 1)
-  (with-eval-after-load 'flycheck
-    (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
-  (flycheck-add-next-checker 'python-flake8 'python-pylint)
+(global-flycheck-mode 1)
+(with-eval-after-load 'flycheck
+  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+(flycheck-add-next-checker 'python-flake8 'python-pylint)
+
+(flymake-mode -1)
 #+end_src
 
 ** dired
@@ -241,9 +238,35 @@ https://github.com/noctuid/general.el
   (setq persp-autokill-buffer-on-remove 'kill-weak)
   (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
 #+end_src
+** doom-modeline
+#+begin_src emacs-lisp
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+#+end_src
 
 
 * KeyBinds
+** global
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-;") 'keyboard-escape-quit)
+#+end_src
+
+** resize window
+*** centered with dired
+#+begin_src emacs-lisp
+(defun centered ()
+  "In dired, open current file in another window if exists, otherwise split window horizontally."
+  (interactive)
+
+  (split-window-right)
+  (projectile-dired)
+  (other-window 1)
+  (enlarge-window-horizontally 70))
+
+(spc-leader
+  "c c" '(centered :wk "centered"))
+#+end_src
+
 ** marks
 #+begin_src emacs-lisp
 (spc-leader
@@ -251,7 +274,7 @@ https://github.com/noctuid/general.el
   "m a" '(bm-toggle :wk "toggle mark")
   "m n" '(bm-next :wk "next mark")
   "m p" '(bm-previous :wk "prev mark")
-  "m s" '(bm-show :wk "show")
+  "m l" '(bm-show :wk "list marks")
   "m c" '(bm-remove-all-all-buffers :wk "claer mark"))
 #+end_src
 
@@ -274,7 +297,8 @@ https://github.com/noctuid/general.el
 
 (spc-leader 
   "TAB" '(:ignore t :wk "?")
-  "TAB TAB" '(comment-line :wk "comment line"))
+  "TAB TAB" '(comment-line :wk "comment line")
+)
 
 (spc-leader
   "h" '(:ignore t :wk "help & harpoon")
@@ -325,7 +349,7 @@ https://github.com/noctuid/general.el
   "p" '(:ignore t :wk "projectile")
   "p a" '(projectile-add-known-project :wk "add project")
   "p s" '(projectile-switch-project :wk "switch project")
-  "p g" '(projectile-grep :wk "project tile grep")
+  "p g" '(counsel-rg :wk "project tile grep")
 
   "b i" '(projectile-ibuffer :wk "Switch buffer")
   "b n" '(projectile-next-project-buffer :wk "next project buffer")
@@ -418,11 +442,6 @@ https://github.com/noctuid/general.el
   "r s" '(restclient-http-send-current-stay-in-window :wk "send http"))
 #+end_src
 
-** vterm
-#+begin_src emacs-lisp
-(evil-define-key 'normal vterm-mode-map (kbd "p") 'vterm-yank)
-#+end_src
-
 ** Persp-mode
 #+begin_src emacs-lisp
 (spc-leader
@@ -432,6 +451,28 @@ https://github.com/noctuid/general.el
   "w n" '(persp-next :wk "next workspace")
   "w p" '(persp-prev :wk "prev workspace")
   "w k" '(persp-kill :wk "kill workspace")
+)
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
+(spc-leader
+  "g" '(:ignore t :wk "git")
+  "g g" '(magit :wk "magit")
+  "g a" '(magit-stage-buffer-file :wk "add curent file")
+  "g u" '(magit-unstage-buffer-file :wk "unstage current file")
+
+  "g l" '(:ignore t :wk "log")
+  "g l g" '(magit-log-current :wk "log")
+  "g l l" '(magit-log-buffer-file :wk "log buffer")
+
+  "g b" '(:ignore t :wk "branch")
+  "g b b" '(magit-branch-checkout t :wk "branch")
+  "g b p" '(magit-pull-branch t :wk "branch")
+
+  "g d" '(:ignore t :wk "diff")
+  "g d d" '(magit-diff-buffer-file :wk "log buffer")
+  "g d g" '(magit-diff-buffer-file :wk "log buffer")
 )
 #+end_src
 
@@ -486,7 +527,10 @@ https://github.com/noctuid/general.el
             (setq python-indent-offset 4)
             (elpy-enable)
             (elpy-mode)
+            (flymake-mode -1) ;; turn off flymake
+            (remove-hook 'elpy-modules 'elpy-module-flymake)
             (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))))
+;; (setq flycheck-pycheckers-max-line-length 120)
 #+end_src
 ** tree-sitter
 #+begin_src emacs-lisp
@@ -498,7 +542,8 @@ https://github.com/noctuid/general.el
 * decorations
 ** colorthemes
 #+begin_src emacs-lisp
-(load-theme 'doom-nord t)
+;; (load-theme 'doom-nord t)
+(load-theme 'doom-gruvbox t)
 ;; (load-theme 'dracula t)
 #+end_src
 
@@ -509,36 +554,53 @@ https://github.com/noctuid/general.el
 
 ** fonts
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil
-    :font "JetBrainsMonoNL Nerd Font"
-    :height 150 ;; 110
-    ;; :height 110 ;; 110
-    :weight 'medium)
-  (set-face-attribute 'variable-pitch nil
-    :font "JetBrainsMonoNL Nerd Font"
-    :height 160 ;; 120
-    ;; :height 120 ;; 120
-    :weight 'medium)
-  (set-face-attribute 'fixed-pitch nil
-    :font "JetBrainsMonoNL Nerd Font"
-    :height 150 ;; 110
-    ;;:height 110 ;; 110
-    :weight 'medium)
-  ;; Makes commented text and keywords italics.
-  ;; This is working in emacsclient but not emacs.
-  ;; Your font must have an italic face available.
-  (set-face-attribute 'font-lock-comment-face nil
-    :slant 'italic)
-  (set-face-attribute 'font-lock-keyword-face nil
-    :slant 'italic)
+;; small
+;; (set-face-attribute 'default nil
+;;   :font "JetBrainsMonoNL Nerd Font"
+;;   :height 110 ;; 110
+;;   :weight 'medium)
+;; (set-face-attribute 'variable-pitch nil
+;;   :font "JetBrainsMonoNL Nerd Font"
+;;   :height 120 ;; 120
+;;   :weight 'medium)
+;; (set-face-attribute 'fixed-pitch nil
+;;   :font "JetBrainsMonoNL Nerd Font"
+;;   :height 110 ;; 110
+;;   :weight 'medium)
 
-  ;; This sets the default font on all graphical frames created after restarting Emacs.
-  ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
-  ;; are not right unless I also add this method of setting the default font.
-  (add-to-list 'default-frame-alist '(font . "JetBrainsMonoNL Nerd Font"))
+;; big font
+(set-face-attribute 'default nil
+  :font "JetBrainsMonoNL Nerd Font"
+  :height 150 ;; 110
+  ;; :height 110 ;; 110
+  :weight 'medium)
+(set-face-attribute 'variable-pitch nil
+  :font "JetBrainsMonoNL Nerd Font"
+  :height 160 ;; 120
+  ;; :height 120 ;; 120
+  :weight 'medium)
+(set-face-attribute 'fixed-pitch nil
+  :font "JetBrainsMonoNL Nerd Font"
+  :height 150 ;; 110
+  ;;:height 110 ;; 110
+  :weight 'medium)
 
-  ;; Uncomment the following line if line spacing needs adjusting.
-  (setq-default line-spacing 0.12)
+
+;; Makes commented text and keywords italics.
+;; This is working in emacsclient but not emacs.
+;; Your font must have an italic face available.
+(set-face-attribute 'font-lock-comment-face nil
+  :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+  :slant 'italic)
+
+;; This sets the default font on all graphical frames created after restarting Emacs.
+;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
+;; are not right unless I also add this method of setting the default font.
+(add-to-list 'default-frame-alist '(font . "JetBrainsMonoNL Nerd Font"))
+
+;; Uncomment the following line if line spacing needs adjusting.
+(setq-default line-spacing 0.12)
 #+end_src
 
 
@@ -567,52 +629,52 @@ names, e.g. #0000ff is displayed in white with a blue background.
 
 ** diredfl
 #+begin_src emacs-lisp
-(require 'diredfl)
-(diredfl-global-mode 1)
-
-(custom-set-faces
- '(diredfl-dir-heading ((t (:foreground "#8FBCBB"))))
- '(diredfl-number ((t (:foreground "#EBCB8B"))))
-
- ;; Директории
- '(diredfl-dir-name ((t (:foreground "#5E81AC"))))
- 
- ;; Символические ссылки
- '(diredfl-symlink ((t (:foreground "#88C0D0"))))
-
- ;; Исполняемые файлы
- '(diredfl-exec-priv ((t (:foreground "#A3BE8C"))))
- '(diredfl-executable-tag ((t (:foreground "#A3BE8C"))))
-
- ;; Обычные файлы
- '(diredfl-file-name ((t (:foreground "white"))))
- '(diredfl-file-suffix ((t (:foreground "#D8DEE9"))))
-
- ;; Сжатые файлы и архивы
- '(diredfl-compressed-file-suffix ((t (:foreground "#B48EAD"))))
- '(diredfl-compressed-file-name ((t (:foreground "#B48EAD"))))
-
- ;; Специальные файлы (например, устройства)
- '(diredfl-device ((t (:foreground "#EBCB8B"))))
- '(diredfl-special ((t (:foreground "#EBCB8B"))))
-
- ;; Устаревшие и удаленные файлы
- '(diredfl-deletion ((t (:foreground "#BF616A"))))
- '(diredfl-deletion-file-name ((t (:foreground "#BF616A"))))
- '(diredfl-ignored-file-name ((t (:foreground "light gray"))))
-
- ;; Назначенные файлы
- '(diredfl-flag-mark ((t (:foreground "#EBCB8B"))))
- '(diredfl-flag-mark-line ((t (:background "#EBCB8B" :foreground "#434C5E"))))
- '(diredfl-sock-priv ((t (:foreground "#B48EAD"))))
-
- ;; Некоторые другие привилегии
- '(diredfl-no-priv ((t (:foreground "#88C0D0"))))
- '(diredfl-other-priv ((t (:foreground "#81A1C1"))))
- '(diredfl-rare-priv ((t (:foreground "#81A1C1"))))
- '(diredfl-read-priv ((t (:foreground "#5E81AC"))))
- '(diredfl-write-priv ((t (:foreground "#5E81AC"))))
- )
+;; (require 'diredfl)
+;; (diredfl-global-mode 1)
+;; 
+;; (custom-set-faces
+;;  '(diredfl-dir-heading ((t (:foreground "#8FBCBB"))))
+;;  '(diredfl-number ((t (:foreground "#EBCB8B"))))
+;; 
+;;  ;; Директории
+;;  '(diredfl-dir-name ((t (:foreground "#5E81AC"))))
+;;  
+;;  ;; Символические ссылки
+;;  '(diredfl-symlink ((t (:foreground "#88C0D0"))))
+;; 
+;;  ;; Исполняемые файлы
+;;  '(diredfl-exec-priv ((t (:foreground "#A3BE8C"))))
+;;  '(diredfl-executable-tag ((t (:foreground "#A3BE8C"))))
+;; 
+;;  ;; Обычные файлы
+;;  '(diredfl-file-name ((t (:foreground "white"))))
+;;  '(diredfl-file-suffix ((t (:foreground "#D8DEE9"))))
+;; 
+;;  ;; Сжатые файлы и архивы
+;;  '(diredfl-compressed-file-suffix ((t (:foreground "#B48EAD"))))
+;;  '(diredfl-compressed-file-name ((t (:foreground "#B48EAD"))))
+;; 
+;;  ;; Специальные файлы (например, устройства)
+;;  '(diredfl-device ((t (:foreground "#EBCB8B"))))
+;;  '(diredfl-special ((t (:foreground "#EBCB8B"))))
+;; 
+;;  ;; Устаревшие и удаленные файлы
+;;  '(diredfl-deletion ((t (:foreground "#BF616A"))))
+;;  '(diredfl-deletion-file-name ((t (:foreground "#BF616A"))))
+;;  '(diredfl-ignored-file-name ((t (:foreground "light gray"))))
+;; 
+;;  ;; Назначенные файлы
+;;  '(diredfl-flag-mark ((t (:foreground "#EBCB8B"))))
+;;  '(diredfl-flag-mark-line ((t (:background "#EBCB8B" :foreground "#434C5E"))))
+;;  '(diredfl-sock-priv ((t (:foreground "#B48EAD"))))
+;; 
+;;  ;; Некоторые другие привилегии
+;;  '(diredfl-no-priv ((t (:foreground "#88C0D0"))))
+;;  '(diredfl-other-priv ((t (:foreground "#81A1C1"))))
+;;  '(diredfl-rare-priv ((t (:foreground "#81A1C1"))))
+;;  '(diredfl-read-priv ((t (:foreground "#5E81AC"))))
+;;  '(diredfl-write-priv ((t (:foreground "#5E81AC"))))
+;;  )
 #+end_src
 
 *** org chckbox hl
