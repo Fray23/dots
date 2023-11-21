@@ -1,4 +1,5 @@
 chromium
+qutebrowser
 cherrytree
 dbeaver
 docker
@@ -10,7 +11,6 @@ neofetch
 neovim
 python-virtualenv
 qemu-desktop
-qutebrowser
 ripgrep
 rofi
 telegram-desktop
@@ -27,7 +27,6 @@ libreoffice-still
 uwufetch
 ttf-jetbrains-mono-nerd
 ctags
-lua-socket
 libxinerama
 flameshot
 ntfs-3g
@@ -41,3 +40,6 @@ lxappearance
 qt5ct
 fzf
 nitrogen
+gdb
+slock
+libsamplerate

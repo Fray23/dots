@@ -46,7 +46,7 @@
   - [[#icons][icons]]
   - [[#rainbow-mode][rainbow mode]]
   - [[#evil-snipe][evil-snipe]]
-  - [[#diredfl][diredfl]]
+  - [[#org-chckbox-hl][org chckbox hl]]
   - [[#opacity][opacity]]
 
 * auto install packages
@@ -102,9 +102,9 @@
   ;; Список пакетов для установки.
 
 ;; Установите недостающие пакеты.
-;; (dolist (p my-required-packages)
-;;   (unless (package-installed-p p)
-;;     (package-install p)))
+(dolist (p my-required-packages)
+  (unless (package-installed-p p)
+    (package-install p)))
 #+end_src
 
 
@@ -131,7 +131,6 @@
 (setq default-buffer-file-coding-system 'utf-8)           ;  Установка системы кодирования файловых буферов на UTF-8
 (setq scroll-conservatively 10000)                        ;  Установка плавного скроллинга без резкого перемещения экрана
 (electric-pair-mode 1)                                    ;  автоматически закрывать скопки
-(define-key evil-normal-state-map "p" 'evil-paste-before) ;  не копировать после вставки
 #+end_src
 
 * main packages
@@ -151,6 +150,7 @@ https://github.com/emacs-evil/evil
 (require 'evil)
 (evil-mode 1)
 
+(define-key evil-normal-state-map "p" 'evil-paste-before) ;  не копировать после вставки
 (setq evil-collection-mode-list '(dashboard dired ibuffer))
 (evil-collection-init)
 #+end_src
@@ -233,6 +233,7 @@ https://github.com/noctuid/general.el
 
 ** persp-mode
 #+begin_src emacs-lisp
+(setq persp-nil-name "1")
 (with-eval-after-load "persp-mode-autoloads"
   (setq wg-morph-on nil) ;; switch off animation
   (setq persp-autokill-buffer-on-remove 'kill-weak)
@@ -275,7 +276,7 @@ https://github.com/noctuid/general.el
   "m n" '(bm-next :wk "next mark")
   "m p" '(bm-previous :wk "prev mark")
   "m l" '(bm-show :wk "list marks")
-  "m c" '(bm-remove-all-all-buffers :wk "claer mark"))
+  "m k" '(bm-remove-all-all-buffers :wk "claer mark"))
 #+end_src
 
 ** buffer & bookmarks & harpoon
@@ -451,6 +452,13 @@ https://github.com/noctuid/general.el
   "w n" '(persp-next :wk "next workspace")
   "w p" '(persp-prev :wk "prev workspace")
   "w k" '(persp-kill :wk "kill workspace")
+
+  "w 1" '(lambda () (interactive) (persp-frame-switch "1")) :wk "move to workspace 1"
+  "w 2" '(lambda () (interactive) (persp-frame-switch "2")) :wk "move to workspace 2"
+  "w 3" '(lambda () (interactive) (persp-frame-switch "3")) :wk "move to workspace 3"
+  "w 4" '(lambda () (interactive) (persp-frame-switch "4")) :wk "move to workspace 4"
+  "w 5" '(lambda () (interactive) (persp-frame-switch "5")) :wk "move to workspace 5"
+  "w 6" '(lambda () (interactive) (persp-frame-switch "6")) :wk "move to workspace 6"
 )
 #+end_src
 
@@ -543,7 +551,8 @@ https://github.com/noctuid/general.el
 ** colorthemes
 #+begin_src emacs-lisp
 ;; (load-theme 'doom-nord t)
-(load-theme 'doom-gruvbox t)
+;; (load-theme 'doom-gruvbox t)
+(load-theme 'doom-ayu-dark t)
 ;; (load-theme 'dracula t)
 #+end_src
 
@@ -627,57 +636,7 @@ names, e.g. #0000ff is displayed in white with a blue background.
 (evil-snipe-override-mode +1)
 #+end_src
 
-** diredfl
-#+begin_src emacs-lisp
-;; (require 'diredfl)
-;; (diredfl-global-mode 1)
-;; 
-;; (custom-set-faces
-;;  '(diredfl-dir-heading ((t (:foreground "#8FBCBB"))))
-;;  '(diredfl-number ((t (:foreground "#EBCB8B"))))
-;; 
-;;  ;; Директории
-;;  '(diredfl-dir-name ((t (:foreground "#5E81AC"))))
-;;  
-;;  ;; Символические ссылки
-;;  '(diredfl-symlink ((t (:foreground "#88C0D0"))))
-;; 
-;;  ;; Исполняемые файлы
-;;  '(diredfl-exec-priv ((t (:foreground "#A3BE8C"))))
-;;  '(diredfl-executable-tag ((t (:foreground "#A3BE8C"))))
-;; 
-;;  ;; Обычные файлы
-;;  '(diredfl-file-name ((t (:foreground "white"))))
-;;  '(diredfl-file-suffix ((t (:foreground "#D8DEE9"))))
-;; 
-;;  ;; Сжатые файлы и архивы
-;;  '(diredfl-compressed-file-suffix ((t (:foreground "#B48EAD"))))
-;;  '(diredfl-compressed-file-name ((t (:foreground "#B48EAD"))))
-;; 
-;;  ;; Специальные файлы (например, устройства)
-;;  '(diredfl-device ((t (:foreground "#EBCB8B"))))
-;;  '(diredfl-special ((t (:foreground "#EBCB8B"))))
-;; 
-;;  ;; Устаревшие и удаленные файлы
-;;  '(diredfl-deletion ((t (:foreground "#BF616A"))))
-;;  '(diredfl-deletion-file-name ((t (:foreground "#BF616A"))))
-;;  '(diredfl-ignored-file-name ((t (:foreground "light gray"))))
-;; 
-;;  ;; Назначенные файлы
-;;  '(diredfl-flag-mark ((t (:foreground "#EBCB8B"))))
-;;  '(diredfl-flag-mark-line ((t (:background "#EBCB8B" :foreground "#434C5E"))))
-;;  '(diredfl-sock-priv ((t (:foreground "#B48EAD"))))
-;; 
-;;  ;; Некоторые другие привилегии
-;;  '(diredfl-no-priv ((t (:foreground "#88C0D0"))))
-;;  '(diredfl-other-priv ((t (:foreground "#81A1C1"))))
-;;  '(diredfl-rare-priv ((t (:foreground "#81A1C1"))))
-;;  '(diredfl-read-priv ((t (:foreground "#5E81AC"))))
-;;  '(diredfl-write-priv ((t (:foreground "#5E81AC"))))
-;;  )
-#+end_src
-
-*** org chckbox hl
+** org chckbox hl
 #+begin_src emacs-lisp
 (defface org-checkbox-done-text
      '((t (:inherit org-done)))
