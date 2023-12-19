@@ -35,4 +35,5 @@ alias bg='feh --bg-fil'
 alias em='emacsclient -c -n'
 alias bw='/home/fs/bin/pywall.py'
 alias wifi='/home/fs/bin/wifi.py'
+alias bgg='/home/fs/bin/gifwall.sh'
 
