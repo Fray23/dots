@@ -5,4 +5,5 @@ slstatus &
 picom &
 emacs --daemon &
 flameshot &
-exec dwm
+exec ~/bin/startdwm
+

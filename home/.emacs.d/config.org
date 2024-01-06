@@ -125,6 +125,7 @@
 (electric-pair-mode 1)                                    ;  автоматически закрывать скопки
 (global-hl-line-mode 1)                                   ;  cursor line
 (add-hook 'before-save-hook 'delete-trailing-whitespace)  ;  Удаление пустых пробелов в конце строк перед сохранением файла
+(blink-cursor-mode 0)                                     ;  cursorline
 #+end_src
 
 * main packages
@@ -557,9 +558,9 @@ https://github.com/noctuid/general.el
 ;; (load-theme 'doom-gruvbox t)
 ;; (load-theme 'doom-ayu-dark t)
 ;; (load-theme 'doom-dracula t)
-;; (load-theme 'doom-tomorrow-night t)
+(load-theme 'doom-tomorrow-night t)
 ;; (load-theme 'doom-monokai-pro t)
-(load-theme 'doom-spacegrey t)
+;; (load-theme 'doom-spacegrey t)
 
 #+End_src
 
