@@ -548,19 +548,22 @@ https://github.com/noctuid/general.el
 * decorations
 ** colorthemes
 #+begin_src emacs-lisp
-(custom-set-faces
- '(line-number ((t (:foreground "white"))))               ; Цвет отображения номера строки
- '(line-number-current-line ((t (:foreground "white"))))) ; Цвет текущей строки
+; (custom-set-faces
+;  '(line-number ((t (:foreground "white"))))               ; Цвет отображения номера строки
+;  '(line-number-current-line ((t (:foreground "white"))))) ; Цвет текущей строки
 
 ;; (load-theme 'doom-nord t)
 ;; (load-theme 'doom-nord-aurora t)
 ;; (load-theme 'doom-nord-light t)
-;; (load-theme 'doom-gruvbox t)
+(load-theme 'doom-gruvbox t)
 ;; (load-theme 'doom-ayu-dark t)
 ;; (load-theme 'doom-dracula t)
-(load-theme 'doom-tomorrow-night t)
+;; (load-theme 'doom-tomorrow-night t)
 ;; (load-theme 'doom-monokai-pro t)
 ;; (load-theme 'doom-spacegrey t)
+
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/everforest-theme")
+;; (load-theme 'everforest-hard-dark t)
 
 #+End_src
 
@@ -571,38 +574,6 @@ https://github.com/noctuid/general.el
 
 ** fonts
 #+begin_src emacs-lisp
-;; small
-;; (set-face-attribute 'default nil
-;;   :font "JetBrainsMonoNL Nerd Font"
-;;   :height 110 ;; 110
-;;   :weight 'medium)
-;; (set-face-attribute 'variable-pitch nil
-;;   :font "JetBrainsMonoNL Nerd Font"
-;;   :height 120 ;; 120
-;;   :weight 'medium)
-;; (set-face-attribute 'fixed-pitch nil
-;;   :font "JetBrainsMonoNL Nerd Font"
-;;   :height 110 ;; 110
-;;   :weight 'medium)
-
-;; big font
-(set-face-attribute 'default nil
-  :font "JetBrainsMonoNL Nerd Font"
-  :height 150 ;; 110
-  ;; :height 110 ;; 110
-  :weight 'medium)
-(set-face-attribute 'variable-pitch nil
-  :font "JetBrainsMonoNL Nerd Font"
-  :height 160 ;; 120
-  ;; :height 120 ;; 120
-  :weight 'medium)
-(set-face-attribute 'fixed-pitch nil
-  :font "JetBrainsMonoNL Nerd Font"
-  :height 150 ;; 110
-  ;;:height 110 ;; 110
-  :weight 'medium)
-
-
 ;; Makes commented text and keywords italics.
 ;; This is working in emacsclient but not emacs.
 ;; Your font must have an italic face available.
@@ -611,6 +582,40 @@ https://github.com/noctuid/general.el
 (set-face-attribute 'font-lock-keyword-face nil
   :slant 'italic)
 
+(defun set-small-font ()
+  (interactive)
+  (set-face-attribute 'default nil
+                      :font "JetBrainsMonoNL Nerd Font"
+                      :height 110
+                      :weight 'medium)
+  (set-face-attribute 'variable-pitch nil
+                      :font "JetBrainsMonoNL Nerd Font"
+                      :height 120
+                      :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil
+                      :font "JetBrainsMonoNL Nerd Font"
+                      :height 110
+                      :weight 'medium))
+
+(defun set-big-font ()
+  (interactive)
+  (set-face-attribute 'default nil
+                      :font "JetBrainsMonoNL Nerd Font"
+                      :height 150
+                      :weight 'medium)
+  (set-face-attribute 'variable-pitch nil
+                      :font "JetBrainsMonoNL Nerd Font"
+                      :height 160
+                      :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil
+                      :font "JetBrainsMonoNL Nerd Font"
+                      :height 150
+                      :weight 'medium))
+
+(spc-leader
+  "c f" '(:ignore t :wk "font")
+  "c f s" '(set-small-font :wk "small font")
+  "c f b" '(set-big-font :wk "big font"))
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
 ;; are not right unless I also add this method of setting the default font.
