@@ -423,10 +423,11 @@ https://github.com/noctuid/general.el
 (spc-leader
   "o" '(:ignore t :wk "org mode")
   "o c" '(org-time-stamp :wk "calendar paste date")
-  "o r" '(org-shiftmetaright :wk "move metric right")
-  "o l" '(org-shiftmetaleft :wk "move metric left")
+  "o l" '(org-shiftmetaright :wk "move metric right")
+  "o h" '(org-shiftmetaleft :wk "move metric left")
   "o t" '(org-tree-to-indirect-buffer :wk "tree to inderect buffer")
   "o o" '(org-cycle-global :wk "org cycle global")
+  "o i" '(org-display-inline-images :wk "display image")
 )
 #+end_src
 
