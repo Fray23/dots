@@ -143,7 +143,7 @@ plist_move_up         =
 plist_move_down       = 
 save_playlist         = w
 remove_dead_entries   = 
-clear_playlist        =
+clear_playlist        = D
 
 # Queue manipulation keys:
 enqueue_file          = z

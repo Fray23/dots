@@ -26,6 +26,7 @@ drawing
 libreoffice-still
 uwufetch
 ttf-jetbrains-mono-nerd
+ttf-iosevka-nerd
 ctags
 libxinerama
 flameshot
@@ -46,3 +47,8 @@ libsamplerate
 mpv
 ltrace
 atril
+wireguard-tools
+transmission-gtk
+gnome-sound-recorder
+emacs
+git-delta

@@ -1,7 +1,6 @@
 #+TITLE:Config
 #+AUTH
 #+STARTUP: showeverything
-#+OPTIONS: toc:2
 
 * :toc:
 - [[#auto-install-packages][auto install packages]]
@@ -14,22 +13,25 @@
   - [[#key-chord][key chord]]
   - [[#flycheck][flycheck]]
   - [[#dired][dired]]
+  - [[#image-dired][image dired]]
   - [[#org-download][org-download]]
   - [[#restclient][restclient]]
   - [[#persp-mode][persp-mode]]
+  - [[#anzu][anzu]]
   - [[#doom-modeline][doom-modeline]]
+  - [[#perfect-margin][Perfect margin]]
+  - [[#centered-cursor-mode][centered-cursor-mode]]
 - [[#keybinds][KeyBinds]]
+  - [[#file][file]]
   - [[#resize-window][resize window]]
   - [[#marks][marks]]
   - [[#buffer--bookmarks--harpoon][buffer & bookmarks & harpoon]]
-  - [[#tabs-and-terminag][tabs and terminag]]
   - [[#ivy-1][ivy]]
   - [[#project][project]]
   - [[#dired-1][DIRED]]
   - [[#sudo-edit--code][Sudo Edit & code]]
   - [[#org-mode][ORG mode]]
   - [[#restclient-1][Restclient]]
-  - [[#persp-mode-1][Persp-mode]]
   - [[#magit][Magit]]
 - [[#org-settings][ORG settings]]
   - [[#org-temo-chet-sheet][Org Temo chet sheet]]
@@ -46,6 +48,7 @@
   - [[#nyan-mode][Nyan-mode]]
   - [[#evil-snipe][evil-snipe]]
   - [[#org-chckbox-hl][org chckbox hl]]
+  - [[#hl-todo][hl-todo]]
 
 * auto install packages
 #+begin_src emacs-lisp
@@ -72,6 +75,9 @@
     org-download
     restclient
     persp-mode ;; watch docs
+    magit
+    magit-delta
+    image-dired
 
     ;; decorations
     rainbow-mode
@@ -79,6 +85,8 @@
     all-the-icons-dired ;; M-x all-the-icons-install-fonts
     centered-window
     nyan-mode
+    perfect-margin
+    hl-todo
 
     tree-sitter
     diff-hl
@@ -88,6 +96,7 @@
     flycheck-pycheckers
     ;; python
     elpy
+
     haskell-mode
    ))
 
@@ -131,24 +140,34 @@
 * main packages
 ** Evil Mode
 https://github.com/emacs-evil/evil
-
 #+begin_src emacs-lisp
 ;; evil, evil-collection
-(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+(setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-vsplit-window-right t)
 (setq evil-split-window-below t)
-
 (setq evil-want-C-u-scroll t)
 
 (require 'evil)
 (evil-mode 1)
+(setq-default evil-surround-pairs-alist '((?\( . ("(" . ")"))   ;; убираем пробелы
+                                          (?\[ . ("[" . "]"))
+                                          (?\{ . ("{" . "}"))
+                                          (?\" . ("\"" . "\""))
+                                          (?\` . ("`" . "`"))
+                                          (?\' . ("'" . "'"))
+                                          (?\) . ("(" . ")"))
+                                          (?\] . ("[" . "]"))
+                                          (?\} . ("{" . "}"))))
 
 (define-key evil-normal-state-map "p" 'evil-paste-after) ;  не копировать после вставки
-;; (setq evil-kill-on-visual-paste nil)  ;  не копировать после вставки
+(setq evil-kill-on-visual-paste nil)                     ;  не копировать после вставки
 ;; (setq-default evil-kill-on-visual-paste nil)
 (setq evil-collection-mode-list '(dashboard dired ibuffer))
 (evil-collection-init)
+
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 #+end_src
 
 
@@ -156,20 +175,20 @@ https://github.com/emacs-evil/evil
 https://github.com/noctuid/general.el
 
 #+begin_src emacs-lisp
-  (require 'general)
-  (general-evil-setup)
+(require 'general)
+(general-evil-setup)
 
-  (general-create-definer spc-leader
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC") ;; access leader in insert mode
+(general-create-definer spc-leader
+  :states '(normal insert visual emacs)
+  :keymaps 'override
+  :prefix "SPC" ;; set leader
+  :global-prefix "M-SPC") ;; access leader in insert mode
 #+end_src
 
 ** pojectile
 #+begin_src emacs-lisp
-  (projectile-mode +1)
-  (setq projectile-completion-system 'ivy)
+(projectile-mode +1)
+(setq projectile-completion-system 'ivy)
 #+end_src
 
 ** Ivy
@@ -209,7 +228,12 @@ https://github.com/noctuid/general.el
 
 (setq dired-guess-shell-alist-user
       '(("\\.xlsx\\'" "libreoffice")))
+#+end_src
 
+** image dired
+#+begin_src emacs-lisp
+(require 'image-dired)
+(setq image-dired-thumb-size 300)
 #+end_src
 
 ** org-download
@@ -227,11 +251,51 @@ https://github.com/noctuid/general.el
 
 ** persp-mode
 #+begin_src emacs-lisp
-(setq persp-nil-name "1")
-(with-eval-after-load "persp-mode-autoloads"
-  (setq wg-morph-on nil) ;; switch off animation
-  (setq persp-autokill-buffer-on-remove 'kill-weak)
-  (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
+(use-package persp-mode
+  :ensure t
+  :config
+  (setq persp-nil-name "1")
+  (with-eval-after-load "persp-mode-autoloads"
+    (setq wg-morph-on nil) ;; switch off animation
+    ;; (setq persp-autokill-buffer-on-remove 'kill-weak)
+    (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
+  )
+
+(spc-leader
+  "w" '(:ignore t :wk "workspace")
+  "w c" '(persp-add-new :wk "create workspace")
+  "w s" '(persp-switch :wk "switch workspace")
+  "w n" '(persp-next :wk "next workspace")
+  "w p" '(persp-prev :wk "prev workspace")
+  "w k" '(persp-kill :wk "kill workspace")
+
+  "w 1" '((lambda () (interactive) (persp-frame-switch "1")) :wk "1 (main)")
+  "w 2" '((lambda () (interactive) (persp-frame-switch "2")) :wk "2 (http)")
+  "w 3" '((lambda () (interactive) (persp-frame-switch "3")) :wk "3 (research)")
+  "w 4" '((lambda () (interactive) (persp-frame-switch "4")) :wk "4 (other project)")
+  "w 5" '((lambda () (interactive) (persp-frame-switch "5")) :wk "5")
+  "w 6" '((lambda () (interactive) (persp-frame-switch "6")) :wk "6")
+  "w 7" '((lambda () (interactive) (persp-frame-switch "7")) :wk "7")
+  "w 8" '((lambda () (interactive) (persp-frame-switch "8")) :wk "8")
+  "w 9" '((lambda () (interactive) (persp-frame-switch "9")) :wk "9")
+  "w w" '((lambda () (interactive) (persp-frame-switch "w")) :wk "w")
+)
+#+end_src
+
+** anzu
+#+begin_src emacs-lisp
+(use-package anzu
+  :ensure t
+  :config
+)
+
+(use-package evil-anzu
+  :ensure t
+  :after (evil anzu)
+  :config
+  (setq anzu-search-threshold 0)
+  (setq anzu-cons-mode-line-p nil)
+  (global-anzu-mode 1))
 #+end_src
 
 ** doom-modeline
@@ -240,7 +304,37 @@ https://github.com/noctuid/general.el
 (doom-modeline-mode 1)
 #+end_src
 
+** Perfect margin
+#+begin_src emacs-lisp
+(setq perfect-margin-visible-width 150)
+#+end_src
+
+** centered-cursor-mode
+#+begin_src emacs-lisp
+(use-package centered-cursor-mode
+  :ensure t
+  :config
+  (global-centered-cursor-mode 0))
+#+end_src
+
+
 * KeyBinds
+** file
+#+begin_src emacs-lisp
+(defun open-current-directory-in-dired ()
+  "Open the current directory of the current file in Dired.
+If a Dired buffer is already opened, navigate to that buffer."
+  (interactive)
+  (let ((dir (file-name-directory (or buffer-file-name default-directory))))
+    (if (get-buffer-window (dired-noselect dir))
+        (switch-to-buffer-other-window (dired-noselect dir))
+      (dired-jump nil dir))))
+
+(spc-leader
+  "f" '(:ignore t :wk "file")
+  "f c" '(copy-file :wk "copy file")
+  "f o" '(open-current-directory-in-dired :wk "open in dired"))
+#+end_src
 ** resize window
 *** centered with dired
 #+begin_src emacs-lisp
@@ -265,7 +359,14 @@ https://github.com/noctuid/general.el
   "m n" '(bm-next :wk "next mark")
   "m p" '(bm-previous :wk "prev mark")
   "m l" '(bm-show :wk "list marks")
+  "m g" '(lambda () (interactive) (bm-show-goto-bookmark) (recenter) :wk "goto bookmark")
   "m k" '(bm-remove-all-all-buffers :wk "claer mark"))
+
+(setq bm-marker 'bm-marker-left)
+(setq bm-highlight-style nil)
+(setq bm-highlight-style 'bm-highlight-only-fringe)
+(custom-set-faces
+ '(bm-face ((t (:background "yellow" :foreground "black" :weight bold)))))
 #+end_src
 
 ** buffer & bookmarks & harpoon
@@ -274,7 +375,7 @@ https://github.com/noctuid/general.el
   ;; buffer
   "b" '(:ignore t :wk "buffer")
   "b i" '(ibuffer :wk "Switch ibuffer")
-  "b b" '(switch-to-buffer :wk "Switch buffer")
+  "b b" '(projectile-switch-to-buffer :wk "Switch buffer")
   "b k" '(kill-this-buffer :wk "Kill this buffer")
   ;; bookmark
   "b s" '(bookmark-set :wk "set bookmarks")
@@ -313,25 +414,6 @@ https://github.com/noctuid/general.el
   "h r r" '((lambda () (interactive) (load-file "/home/fs/.emacs.d/init.el")) :wk "Reload emacs config"))
 #+end_src
 
-** tabs and terminag
-#+begin_src emacs-lisp
-(use-package centaur-tabs
-  :demand
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-style "bar")
-  (setq centaur-tabs-set-icons t)
-  :bind
-  ("C-h" . centaur-tabs-backward-tab)
-  ("C-l" . centaur-tabs-forward-tab))
-
-(spc-leader
-    "t" '(:ignore t :wk "tab and terminal")
-    "t t" '(vterm :wk "vterm")
-    "t k" '(centaur-tabs--kill-this-buffer-dont-ask :wk "close tab")
-    "t K" '(centaur-tabs-kill-other-buffers-in-current-group :wk "close all tab"))
-#+end_src
-
 ** ivy
 #+begin_src emacs-lisp
 (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
@@ -341,7 +423,8 @@ https://github.com/noctuid/general.el
 ** project
 #+begin_src emacs-lisp
 (spc-leader
-  "SPC" '(counsel-fzf :wk "find file")
+  "," '(find-file :wk "fzf find file")
+  "SPC" '(counsel-fzf :wk "fzf find file")
   "." '(swiper :wk "swiper")
   "p" '(:ignore t :wk "projectile")
   "p a" '(projectile-add-known-project :wk "add project")
@@ -407,6 +490,7 @@ https://github.com/noctuid/general.el
 
 #+end_src
 
+
 ** Sudo Edit & code
 #+begin_src emacs-lisp
 (require 'sudo-edit)
@@ -415,7 +499,9 @@ https://github.com/noctuid/general.el
   "c s" '(sudo-edit :wk "sudo-edit")
   "s" '(:ignore t :wk "split window")
   "s h" '(split-window-right :wk "split window horizontaly")
-  "s v" '(split-window-below :wk "split window verticalty"))
+  "s v" '(split-window-below :wk "split window verticalty")
+  "c p" '(perfect-margin-mode :wk "center")
+)
 #+end_src
 
 ** ORG mode
@@ -438,52 +524,41 @@ https://github.com/noctuid/general.el
   "r s" '(restclient-http-send-current-stay-in-window :wk "send http"))
 #+end_src
 
-** Persp-mode
-#+begin_src emacs-lisp
-(spc-leader
-  "w" '(:ignore t :wk "workspace")
-  "w a" '(persp-add-new :wk "switch workspace")
-  "w s" '(persp-switch :wk "switch workspace")
-  "w n" '(persp-next :wk "next workspace")
-  "w p" '(persp-prev :wk "prev workspace")
-  "w k" '(persp-kill :wk "kill workspace")
-
-  "w 1" '((lambda () (interactive) (persp-frame-switch "1")) :wk "1 (main)")
-  "w 2" '((lambda () (interactive) (persp-frame-switch "2")) :wk "2 (http)")
-  "w 3" '((lambda () (interactive) (persp-frame-switch "3")) :wk "3 (research)")
-  "w 4" '((lambda () (interactive) (persp-frame-switch "4")) :wk "4 (other project)")
-  "w 5" '((lambda () (interactive) (persp-frame-switch "5")) :wk "5")
-  "w 6" '((lambda () (interactive) (persp-frame-switch "6")) :wk "6")
-  "w 7" '((lambda () (interactive) (persp-frame-switch "7")) :wk "7")
-  "w 8" '((lambda () (interactive) (persp-frame-switch "8")) :wk "8")
-  "w 9" '((lambda () (interactive) (persp-frame-switch "9")) :wk "9")
-)
-#+end_src
-
 ** Magit
 #+begin_src emacs-lisp
-(spc-leader
-  "g" '(:ignore t :wk "git")
-  "g g" '(magit :wk "magit")
-  "g a" '(magit-stage-buffer-file :wk "add curent file")
-  "g u" '(magit-unstage-buffer-file :wk "unstage current file")
 
-  "g l" '(:ignore t :wk "log")
-  "g l g" '(magit-log-current :wk "log")
-  "g l l" '(magit-log-buffer-file :wk "log buffer")
+(require 'magit)
+  (spc-leader
+    "g" '(:ignore t :wk "git")
+    "g g" '(magit :wk "magit")
+    "g a" '(magit-stage-buffer-file :wk "add curent file")
+    "g u" '(magit-unstage-buffer-file :wk "unstage current file")
 
-  "g b" '(:ignore t :wk "branch")
-  "g b b" '(magit-branch-checkout t :wk "branch")
-  "g b p" '(magit-pull-branch t :wk "branch")
+    "g l" '(:ignore t :wk "log")
+    "g l g" '(magit-log-current :wk "log")
+    "g l l" '(magit-log-buffer-file :wk "log buffer")
 
-  "g d" '(:ignore t :wk "diff")
-  "g d d" '(magit-diff-buffer-file :wk "log buffer")
-  "g d g" '(magit-diff-unstaged :wk "diff unstaged buffer")
-  "g d s" '(magit-diff-staged :wk "diff staged buffer")
-)
+    "g b" '(:ignore t :wk "branch")
+    "g b b" '(magit-branch-checkout t :wk "branch")
+    "g b p" '(magit-pull-branch t :wk "branch")
+
+    "g d" '(:ignore t :wk "diff")
+    "g d d" '(magit-diff-buffer-file :wk "log buffer")
+    "g d g" '(magit-diff-unstaged :wk "diff unstaged buffer")
+    "g d s" '(magit-diff-staged :wk "diff staged buffer")
+  )
+
+  ; (use-package magit-delta
+  ;   :hook (magit-mode . magit-delta-mode))
+
+  ; (defun my-magit-toggle-evil-visual-line-mode ()
+  ;   "Включает или выключает evil-visual-line-mode в режиме magit-mode."
+  ;   (interactive)
+  ;    (evil-visual-line))
+
+  ; (define-key magit-mode-map (kbd "C-c v") #'my-magit-toggle-evil-visual-line-mode)
+
 #+end_src
-
-
 
 * ORG settings
 ** Org Temo chet sheet
@@ -505,7 +580,7 @@ https://github.com/noctuid/general.el
 (require 'toc-org nil t)
    (add-hook 'org-mode-hook 'toc-org-enable)
    (add-hook 'org-mode-hook 'org-indent-mode)
-   (setq toc-org-max-depth 2)
+   ;; (setq toc-org-max-depth 2)
 
 (require 'org-bullets)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -537,35 +612,36 @@ https://github.com/noctuid/general.el
             (flymake-mode -1) ;; turn off flymake
             (remove-hook 'elpy-modules 'elpy-module-flymake)
             (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))))
-;; (setq flycheck-pycheckers-max-line-length 120)
 #+end_src
+
 ** tree-sitter
 #+begin_src emacs-lisp
-  (add-hook 'python-mode-hook #'tree-sitter-mode +1)
-  (add-hook 'python-mode-hook #'tree-sitter-hl-mode +1)
+(add-hook 'python-mode-hook #'tree-sitter-mode +1)
+(add-hook 'python-mode-hook #'tree-sitter-hl-mode +1)
 #+end_src
 
 
 * decorations
 ** colorthemes
 #+begin_src emacs-lisp
-; (custom-set-faces
-;  '(line-number ((t (:foreground "white"))))               ; Цвет отображения номера строки
-;  '(line-number-current-line ((t (:foreground "white"))))) ; Цвет текущей строки
+(custom-set-faces
+ '(line-number ((t (:foreground "white"))))               ; Цвет отображения номера строки
+ '(line-number-current-line ((t (:foreground "white"))))) ; Цвет текущей строки
 
-;; (load-theme 'doom-nord t)
-;; (load-theme 'doom-nord-aurora t)
-;; (load-theme 'doom-nord-light t)
-(load-theme 'doom-gruvbox t)
-;; (load-theme 'doom-ayu-dark t)
-;; (load-theme 'doom-dracula t)
-;; (load-theme 'doom-tomorrow-night t)
-;; (load-theme 'doom-monokai-pro t)
-;; (load-theme 'doom-spacegrey t)
+; (load-theme 'doom-nord t)
+; (load-theme 'doom-nord-aurora t)
+; (load-theme 'doom-nord-light t)
+; (load-theme 'doom-gruvbox t)
+; (load-theme 'doom-ayu-dark t)
+; (load-theme 'doom-dracula t)
+; (load-theme 'doom-tomorrow-night t)
+; (load-theme 'doom-monokai-pro t)
+(load-theme 'doom-spacegrey t)
 
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/everforest-theme")
-;; (load-theme 'everforest-hard-dark t)
+; (add-to-list 'custom-theme-load-path "~/.emacs.d/everforest-theme")
+; (load-theme 'everforest-hard-dark t)
 
+(set-frame-parameter nil 'alpha-background 92)
 #+End_src
 
 ** diff
@@ -624,7 +700,9 @@ https://github.com/noctuid/general.el
 
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
+
 #+end_src
+
 
 ** icons
 #+begin_src emacs-lisp
@@ -655,6 +733,7 @@ names, e.g. #0000ff is displayed in white with a blue background.
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
+(setq evil-snipe-smart-case +1)
 #+end_src
 
 ** org chckbox hl
@@ -667,4 +746,10 @@ names, e.g. #0000ff is displayed in white with a blue background.
   'org-mode
   `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-checkbox-done-text prepend))
   'append)
+#+end_src
+
+** hl-todo
+#+begin_src emacs-lisp
+(require 'hl-todo)
+(global-hl-todo-mode +1)
 #+end_src
